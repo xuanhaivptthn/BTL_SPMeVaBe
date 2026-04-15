@@ -8,6 +8,41 @@ package Model;
  *
  * @author gmtfarcb
  */
-public class NhanVien {
-    
+public class NhanVien extends Person {
+
+    private String MaNhanVien;
+    private String ChucVu;
+    private String password;
+
+    public NhanVien() {
+        super();
+    }
+
+    public String getMaNhanVien() {
+        return MaNhanVien;
+    }
+
+    public void setMaNhanVien(String MaNhanVien) {
+        this.MaNhanVien = MaNhanVien;
+    }
+
+    public String getChucVu() {
+        return ChucVu;
+    }
+
+    public void setChucVu(String ChucVu) {
+        this.ChucVu = ChucVu;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getRole() {
+        return "STAFF";
+    }
 }

@@ -8,6 +8,32 @@ package Model;
  *
  * @author gmtfarcb
  */
-public class KhachHang {
-    
+public class KhachHang extends Person {
+
+    private String password;
+    private int loyaltyPoints;
+
+    public KhachHang() {
+        super();
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getRole() {
+        return "CUSTOMER";
+    }
+
+    public int getLoyaltyPoints() {
+        return loyaltyPoints;
+    }
+
+    public void setLoyaltyPoints(int loyaltyPoints) {
+        this.loyaltyPoints = loyaltyPoints;
+    }
 }
