@@ -63,7 +63,7 @@ public class HienThiSP extends HttpServlet {
             dbName = "QLBanHang"; // default - change as needed
         }
         SanPhamDAO dao = new SanPhamDAO();
-        List<SanPham> products = dao.getAll(dbName);
+        List<SanPham> products = dao.getAll();
         request.setAttribute("products", products);
         request.getRequestDispatcher("/products.jsp").forward(request, response);
     }

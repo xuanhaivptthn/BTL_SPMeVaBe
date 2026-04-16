@@ -44,10 +44,10 @@ public class SanPhamDAO {
         }
     }
 
-    public List<SanPham> getAll(String dbName) {
+    public List<SanPham> getAll() {
         List<SanPham> list = new ArrayList<>();
         String sql = "SELECT MaSanPham, TenSanPham, ThongTinSanPham, GiaTien, SoLuong FROM SanPham";
-        try (Connection conn = DBConnect.getConnection(dbName);
+        try (Connection conn = DBConnect.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
 
@@ -69,9 +69,9 @@ public class SanPhamDAO {
         return list;
     }
 
-    public SanPham getById(String dbName, int id) {
+    public SanPham getById(int id) {
         String sql = "SELECT MaSanPham, TenSanPham, ThongTinSanPham, GiaTien, SoLuong FROM SanPham WHERE MaSanPham = ?";
-        try (Connection conn = DBConnect.getConnection(dbName);
+        try (Connection conn = DBConnect.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
@@ -92,9 +92,9 @@ public class SanPhamDAO {
         return null;
     }
 
-    public boolean insert(String dbName, SanPham p) {
+    public boolean insert(SanPham p) {
         String sql = "INSERT INTO SanPham (TenSanPham, ThongTinSanPham, GiaTien, SoLuong) VALUES (?,?,?,?)";
-        try (Connection conn = DBConnect.getConnection(dbName);
+        try (Connection conn = DBConnect.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, p.getTenSanPham());
             ps.setString(2, p.getThongTinSanPham());
@@ -116,9 +116,9 @@ public class SanPhamDAO {
         }
     }
 
-    public boolean update(String dbName, SanPham p) {
+    public boolean update(SanPham p) {
         String sql = "UPDATE SanPham SET TenSanPham=?, ThongTinSanPham=?, GiaTien=?, SoLuong=?, updatedAt=NOW() WHERE MaSanPham=?";
-        try (Connection conn = DBConnect.getConnection(dbName);
+        try (Connection conn = DBConnect.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, p.getTenSanPham());
             ps.setString(2, p.getThongTinSanPham());
@@ -141,9 +141,9 @@ public class SanPhamDAO {
         }
     }
 
-    public boolean delete(String dbName, int id) {
+    public boolean delete(int id) {
         String sql = "DELETE FROM SanPham WHERE MaSanPham = ?";
-        try (Connection conn = DBConnect.getConnection(dbName);
+        try (Connection conn = DBConnect.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);
             return ps.executeUpdate() > 0;

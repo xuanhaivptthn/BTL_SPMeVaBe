@@ -8,12 +8,12 @@ import java.sql.*;
 
 public class DBConnect {
 
-    public static Connection getConnection(String dbName) {
+    public static Connection getConnection() {
         String dbPort = "3306";
         String dbUsername = "root";
         String dbPassword = "";
 
-//        String dbName = "QLBanHang";
+        String dbName = "BTL_SPMeVaBe";
 
         String dbUrl = "jdbc:mysql://localhost:" + dbPort + "/" + dbName;
 

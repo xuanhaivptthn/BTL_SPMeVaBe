@@ -22,7 +22,7 @@ public class ProductAdminServlet extends HttpServlet {
         SanPhamDAO dao = new SanPhamDAO();
         if (idParam != null && !idParam.isEmpty()) {
             int id = Integer.parseInt(idParam);
-            SanPham p = dao.getById(dbName, id);
+            SanPham p = dao.getById(id);
             req.setAttribute("product", p);
             req.getRequestDispatcher("/editProduct.jsp").forward(req, resp);
             return;
@@ -63,15 +63,15 @@ public class ProductAdminServlet extends HttpServlet {
             p.setImages(imgs);
 
             if (idParam == null || idParam.isEmpty()) {
-                dao.insert(dbName, p);
+                dao.insert(p);
             } else {
                 p.setMaSanPham(Integer.parseInt(idParam));
-                dao.update(dbName, p);
+                dao.update(p);
             }
         } else if ("delete".equals(action)) {
             String idParam = req.getParameter("id");
             if (idParam != null && !idParam.isEmpty()) {
-                dao.delete(dbName, Integer.parseInt(idParam));
+                dao.delete(Integer.parseInt(idParam));
             }
         }
 

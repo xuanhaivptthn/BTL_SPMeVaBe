@@ -5,9 +5,9 @@ import java.sql.*;
 
 public class KhachHangDAO {
 
-    public boolean insert(String dbName, KhachHang k) {
+    public boolean insert(KhachHang k) {
         String sql = "INSERT INTO KhachHang (HoTen, email, password, DienThoai, Status) VALUES (?,?,?,?,?)";
-        try (Connection conn = DBConnect.getConnection(dbName);
+        try (Connection conn = DBConnect.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, k.getHoTen());
             ps.setString(2, k.getEmail());
@@ -26,9 +26,9 @@ public class KhachHangDAO {
         }
     }
 
-    public KhachHang findByEmail(String dbName, String email) {
+    public KhachHang findByEmail(String email) {
         String sql = "SELECT id, HoTen, email, password, DienThoai, createdAt, Status FROM KhachHang WHERE email = ?";
-        try (Connection conn = DBConnect.getConnection(dbName);
+        try (Connection conn = DBConnect.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, email);
             try (ResultSet rs = ps.executeQuery()) {
@@ -51,9 +51,9 @@ public class KhachHangDAO {
         return null;
     }
 
-    public KhachHang findById(String dbName, int id) {
+    public KhachHang findById(int id) {
         String sql = "SELECT id, HoTen, email, password, DienThoai, createdAt, Status FROM KhachHang WHERE id = ?";
-        try (Connection conn = DBConnect.getConnection(dbName);
+        try (Connection conn = DBConnect.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
@@ -76,9 +76,9 @@ public class KhachHangDAO {
         return null;
     }
 
-    public boolean update(String dbName, KhachHang k) {
+    public boolean update(KhachHang k) {
         String sql = "UPDATE KhachHang SET HoTen=?, email=?, password=?, DienThoai=?, Status=? WHERE id=?";
-        try (Connection conn = DBConnect.getConnection(dbName);
+        try (Connection conn = DBConnect.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, k.getHoTen());
             ps.setString(2, k.getEmail());
@@ -93,9 +93,9 @@ public class KhachHangDAO {
         }
     }
 
-    public boolean delete(String dbName, int id) {
+    public boolean delete(int id) {
         String sql = "DELETE FROM KhachHang WHERE id = ?";
-        try (Connection conn = DBConnect.getConnection(dbName);
+        try (Connection conn = DBConnect.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);
             return ps.executeUpdate() > 0;
