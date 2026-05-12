@@ -6,102 +6,62 @@ import java.sql.*;
 public class KhachHangDAO {
 
     public boolean insert(KhachHang k) {
-        String sql = "INSERT INTO KhachHang (HoTen, email, password, DienThoai, Status) VALUES (?,?,?,?,?)";
-        try (Connection conn = DBConnect.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            ps.setString(1, k.getHoTen());
-            ps.setString(2, k.getEmail());
-            ps.setString(3, k.getPassword());
-            ps.setString(4, k.getDienThoai());
-            ps.setString(5, k.getStatus());
-            int affected = ps.executeUpdate();
-            if (affected == 0) return false;
-            try (ResultSet keys = ps.getGeneratedKeys()) {
-                if (keys.next()) k.setId(keys.getInt(1));
+        String sqlNguoiDung = "INSERT INTO NguoiDung (hoTen, email, dienThoai, tenDangNhap, matKhau, role, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sqlKhachHang = "INSERT INTO KhachHang (id, diemTichLuy) VALUES (?, ?)";
+
+        Connection conn = null;
+        try {
+            conn = DBConnect.getConnection();
+            conn.setAutoCommit(false);
+
+            int generatedId = 0;
+            try (PreparedStatement ps1 = conn.prepareStatement(sqlNguoiDung, Statement.RETURN_GENERATED_KEYS)) {
+                ps1.setString(1, k.getHoTen());
+                ps1.setString(2, k.getEmail());
+                ps1.setString(3, k.getDienThoai());
+                ps1.setString(4, k.getTenDangNhap());
+                ps1.setString(5, k.getMatKhau());
+                ps1.setString(6, "CUSTOMER");
+                ps1.setString(7, "ACTIVE");
+                ps1.executeUpdate();
+
+                try (ResultSet keys = ps1.getGeneratedKeys()) {
+                    if (keys.next()) {
+                        generatedId = keys.getInt(1);
+                        k.setId(generatedId);
+                    }
+                }
             }
+
+            if (generatedId > 0) {
+                try (PreparedStatement ps2 = conn.prepareStatement(sqlKhachHang)) {
+                    ps2.setInt(1, generatedId);
+                    ps2.setInt(2, k.getDiemTichLuy());
+                    ps2.executeUpdate();
+                }
+            }
+
+            conn.commit();
             return true;
         } catch (SQLException ex) {
-            ex.printStackTrace();
-            return false;
-        }
-    }
-
-    public KhachHang findByEmail(String email) {
-        String sql = "SELECT id, HoTen, email, password, DienThoai, createdAt, Status FROM KhachHang WHERE email = ?";
-        try (Connection conn = DBConnect.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, email);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    KhachHang k = new KhachHang();
-                    k.setId(rs.getInt("id"));
-                    k.setHoTen(rs.getString("HoTen"));
-                    k.setEmail(rs.getString("email"));
-                    k.setPassword(rs.getString("password"));
-                    k.setDienThoai(rs.getString("DienThoai"));
-                    Timestamp t = rs.getTimestamp("createdAt");
-                    if (t != null) k.setCreatedAt(t.toLocalDateTime());
-                    k.setStatus(rs.getString("Status"));
-                    return k;
+            if (conn != null) {
+                try {
+                    conn.rollback();
+                } catch (SQLException e) {
+                    e.printStackTrace();
                 }
             }
-        } catch (SQLException ex) {
             ex.printStackTrace();
-        }
-        return null;
-    }
-
-    public KhachHang findById(int id) {
-        String sql = "SELECT id, HoTen, email, password, DienThoai, createdAt, Status FROM KhachHang WHERE id = ?";
-        try (Connection conn = DBConnect.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, id);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    KhachHang k = new KhachHang();
-                    k.setId(rs.getInt("id"));
-                    k.setHoTen(rs.getString("HoTen"));
-                    k.setEmail(rs.getString("email"));
-                    k.setPassword(rs.getString("password"));
-                    k.setDienThoai(rs.getString("DienThoai"));
-                    Timestamp t = rs.getTimestamp("createdAt");
-                    if (t != null) k.setCreatedAt(t.toLocalDateTime());
-                    k.setStatus(rs.getString("Status"));
-                    return k;
+            return false;
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.setAutoCommit(true);
+                    conn.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
                 }
             }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-        return null;
-    }
-
-    public boolean update(KhachHang k) {
-        String sql = "UPDATE KhachHang SET HoTen=?, email=?, password=?, DienThoai=?, Status=? WHERE id=?";
-        try (Connection conn = DBConnect.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, k.getHoTen());
-            ps.setString(2, k.getEmail());
-            ps.setString(3, k.getPassword());
-            ps.setString(4, k.getDienThoai());
-            ps.setString(5, k.getStatus());
-            ps.setInt(6, k.getId());
-            return ps.executeUpdate() > 0;
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            return false;
-        }
-    }
-
-    public boolean delete(int id) {
-        String sql = "DELETE FROM KhachHang WHERE id = ?";
-        try (Connection conn = DBConnect.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, id);
-            return ps.executeUpdate() > 0;
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            return false;
         }
     }
 }

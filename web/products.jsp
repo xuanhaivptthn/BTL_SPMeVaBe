@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html>
@@ -7,48 +8,49 @@
     <title>Danh sách sản phẩm</title>
 </head>
 <body>
-<h1>Danh sách sản phẩm</h1>
+    <jsp:include page="components/header.jsp" />
 
-<c:choose>
-    <c:when test="${empty products}">
-        <p>Không có sản phẩm nào.</p>
-    </c:when>
-    <c:otherwise>
-        <table border="1" cellpadding="6" cellspacing="0">
-            <thead>
-            <tr>
-                <th>MaSanPham</th>
-                <th>TenSanPham</th>
-                <th>GiaTien</th>
-                <th>SoLuong</th>
-                <th>Hinh</th>
-            </tr>
-            </thead>
-            <tbody>
-            <c:forEach var="p" items="${products}">
-                <tr>
-                    <td><c:out value="${p.maSanPham}"/></td>
-                    <td><c:out value="${p.tenSanPham}"/></td>
-                    <td><c:out value="${p.giaTien}"/></td>
-                    <td><c:out value="${p.soLuong}"/></td>
-                    <td>
+    <h2>Danh sách sản phẩm</h2>
+
+    <c:choose>
+        <c:when test="${empty products}">
+            <p>Không có sản phẩm nào.</p>
+        </c:when>
+        <c:otherwise>
+            <div class="product-list">
+                <c:forEach var="p" items="${products}">
+                    <div class="product-item" style="border: 1px solid #000; padding: 10px; margin-bottom: 10px; width: 300px;">
                         <c:choose>
                             <c:when test="${not empty p.images}">
                                 <c:forEach var="img" items="${p.images}" begin="0" end="0">
-                                    <img src="${img}" alt="" width="80"/>
+                                    <c:choose>
+                                        <c:when test="${fn:startsWith(img, 'http')}">
+                                            <img src="${img}" alt="${p.tenSanPham}" width="150"/><br/>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <img src="${pageContext.request.contextPath}/${img}" alt="${p.tenSanPham}" width="150"/><br/>
+                                        </c:otherwise>
+                                    </c:choose>
                                 </c:forEach>
                             </c:when>
                             <c:otherwise>
-                                (no image)
+                                <p>(Chưa có ảnh)</p>
                             </c:otherwise>
                         </c:choose>
-                    </td>
-                </tr>
-            </c:forEach>
-            </tbody>
-        </table>
-    </c:otherwise>
-</c:choose>
+                        <h3><c:out value="${p.tenSanPham}"/></h3>
+                        <p>Giá: <c:out value="${p.giaTien}"/> VND</p>
+                        <form action="${pageContext.request.contextPath}/cart" method="post">
+                            <input type="hidden" name="action" value="add"/>
+                            <input type="hidden" name="productId" value="${p.maSanPham}"/>
+                            Số lượng: <input type="number" name="quantity" value="1" min="1" max="${p.soLuong}" style="width: 50px;"/>
+                            <button type="submit">Thêm vào giỏ hàng</button>
+                        </form>
+                    </div>
+                </c:forEach>
+            </div>
+        </c:otherwise>
+    </c:choose>
 
+    <jsp:include page="components/footer.jsp" />
 </body>
 </html>
