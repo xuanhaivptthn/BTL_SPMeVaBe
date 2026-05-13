@@ -24,6 +24,13 @@
         <main class="admin-content">
             <div class="admin-card">
                 <h2>Danh sách Người dùng</h2>
+                <div style="margin-bottom: 20px;">
+                    <form action="${pageContext.request.contextPath}/admin/users" method="get" style="display: flex; gap: 10px;">
+                        <input type="text" name="search" value="${fn:escapeXml(search)}" class="form-control" placeholder="Tìm kiếm theo ID, Họ Tên, Email, Điện Thoại" style="max-width: 400px;"/>
+                        <button type="submit" class="btn btn-secondary">Tìm kiếm</button>
+                        <a href="${pageContext.request.contextPath}/admin/users" class="btn">Xóa bộ lọc</a>
+                    </form>
+                </div>
                 <table class="table-modern">
                     <thead>
                         <tr>

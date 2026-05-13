@@ -22,7 +22,7 @@ public class SanPham {
     private double GiaTien;
     private int SoLuong;
     private int danhMucId;
-    private List<String> images = new ArrayList<>();
+    private String hinhAnh;
 
     public SanPham() {
     }
@@ -67,20 +67,12 @@ public class SanPham {
         this.SoLuong = SoLuong;
     }
 
-    public List getImages() {
-        return images;
+    public String getHinhAnh() {
+        return hinhAnh;
     }
 
-    public void setImages(List images) {
-        this.images = images;
-    }
-
-    public void addImage(String url) {
-        this.images.add(url);
-    }
-
-    public void removeImage(String url) {
-        this.images.remove(url);
+    public void setHinhAnh(String hinhAnh) {
+        this.hinhAnh = hinhAnh;
     }
 
     public String getThanhPhan() {

@@ -25,8 +25,34 @@ public class AdminProductServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String search = request.getParameter("search");
+        String categoryId = request.getParameter("category");
+        String brand = request.getParameter("brand");
+        
         SanPhamDAO dao = new SanPhamDAO();
-        List<SanPham> list = dao.getAll();
+        List<SanPham> list;
+        
+        if ((search != null && !search.trim().isEmpty()) || 
+            (categoryId != null && !categoryId.trim().isEmpty()) || 
+            (brand != null && !brand.trim().isEmpty())) {
+            
+            String[] categories = null;
+            if (categoryId != null && !categoryId.trim().isEmpty()) {
+                categories = new String[]{categoryId};
+            }
+            
+            String[] brands = null;
+            if (brand != null && !brand.trim().isEmpty()) {
+                brands = new String[]{brand};
+            }
+            
+            list = dao.getFilteredProducts(search, categories, brands, null);
+            request.setAttribute("search", search);
+            request.setAttribute("selectedCategory", categoryId);
+            request.setAttribute("selectedBrand", brand);
+        } else {
+            list = dao.getAll();
+        }
         request.setAttribute("products", list);
         request.getRequestDispatcher("/admin/products.jsp").forward(request, response);
     }
@@ -79,12 +105,12 @@ public class AdminProductServlet extends HttpServlet {
                 filePart.write(buildUploadPath + File.separator + fileName);
 
                 // Lưu đường dẫn ảnh vào DB
-                sp.addImage("uploads/" + fileName);
+                sp.setHinhAnh("uploads/" + fileName);
             } else {
                 // Nếu không upload file, kiểm tra xem có điền URL text không
                 String imageText = request.getParameter("imageText");
                 if (imageText != null && !imageText.trim().isEmpty()) {
-                    sp.addImage(imageText);
+                    sp.setHinhAnh(imageText);
                 }
             }
 
@@ -119,15 +145,17 @@ public class AdminProductServlet extends HttpServlet {
                 if (!buildUploadFolder.exists()) buildUploadFolder.mkdirs();
                 filePart.write(buildUploadPath + File.separator + fileName);
 
-                sp.addImage("uploads/" + fileName);
+                sp.setHinhAnh("uploads/" + fileName);
             } else {
                 String imageText = request.getParameter("imageText");
                 if (imageText != null && !imageText.trim().isEmpty()) {
-                    sp.addImage(imageText);
+                    sp.setHinhAnh(imageText);
                 } else {
-                    SanPham oldSp = dao.getById(id);
-                    if(oldSp != null && oldSp.getImages() != null) {
-                        sp.setImages(oldSp.getImages());
+                    if ("update".equals(action)) {
+                        SanPham oldSp = dao.getById(id);
+                        if(oldSp != null && oldSp.getHinhAnh() != null) {
+                            sp.setHinhAnh(oldSp.getHinhAnh());
+                        }
                     }
                 }
             }

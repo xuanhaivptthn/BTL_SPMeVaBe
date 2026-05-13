@@ -18,8 +18,20 @@ public class AdminOrderServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String khachHangId = request.getParameter("khachHangId");
+        String donHangId = request.getParameter("donHangId");
+        
         DonHangDAO dao = new DonHangDAO();
-        List<DonHang> list = dao.getAll();
+        List<DonHang> list;
+        
+        if ((khachHangId != null && !khachHangId.trim().isEmpty()) || (donHangId != null && !donHangId.trim().isEmpty())) {
+            list = dao.getFilteredOrders(khachHangId, donHangId);
+            request.setAttribute("searchKhachHangId", khachHangId);
+            request.setAttribute("searchDonHangId", donHangId);
+        } else {
+            list = dao.getAll();
+        }
+        
         request.setAttribute("orders", list);
         request.getRequestDispatcher("/admin/orders.jsp").forward(request, response);
     }

@@ -37,13 +37,13 @@
                             <td><c:out value="${item.product.tenSanPham}"/></td>
                             <td>
                                 <c:choose>
-                                    <c:when test="${not empty item.product.images}">
+                                    <c:when test="${not empty item.product.hinhAnh}">
                                         <c:choose>
-                                            <c:when test="${fn:startsWith(item.product.images[0], 'http')}">
-                                                <img src="${item.product.images[0]}" alt="img" class="product-img" style="width:80px; height:80px;"/>
+                                            <c:when test="${fn:startsWith(item.product.hinhAnh, 'http')}">
+                                                <img src="${item.product.hinhAnh}" alt="img" class="product-img" style="width:80px; height:80px;"/>
                                             </c:when>
                                             <c:otherwise>
-                                                <img src="${pageContext.request.contextPath}/${item.product.images[0]}" alt="img" class="product-img" style="width:80px; height:80px;"/>
+                                                <img src="${pageContext.request.contextPath}/${item.product.hinhAnh}" alt="img" class="product-img" style="width:80px; height:80px;"/>
                                             </c:otherwise>
                                         </c:choose>
                                     </c:when>

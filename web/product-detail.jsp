@@ -19,13 +19,13 @@
         <div class="product-detail-top">
             <div class="product-detail-image">
                 <c:choose>
-                    <c:when test="${not empty product.images}">
+                    <c:when test="${not empty product.hinhAnh}">
                         <c:choose>
-                            <c:when test="${fn:startsWith(product.images[0], 'http')}">
-                                <img src="${product.images[0]}" alt="${product.tenSanPham}" id="main-image"/>
+                            <c:when test="${fn:startsWith(product.hinhAnh, 'http')}">
+                                <img src="${product.hinhAnh}" alt="${product.tenSanPham}" id="main-image"/>
                             </c:when>
                             <c:otherwise>
-                                <img src="${pageContext.request.contextPath}/${product.images[0]}" alt="${product.tenSanPham}" id="main-image"/>
+                                <img src="${pageContext.request.contextPath}/${product.hinhAnh}" alt="${product.tenSanPham}" id="main-image"/>
                             </c:otherwise>
                         </c:choose>
                     </c:when>
@@ -75,13 +75,13 @@
                     <div class="product-card">
                         <a href="${pageContext.request.contextPath}/product-detail?id=${p.maSanPham}">
                             <c:choose>
-                                <c:when test="${not empty p.images}">
+                                <c:when test="${not empty p.hinhAnh}">
                                     <c:choose>
-                                        <c:when test="${fn:startsWith(p.images[0], 'http')}">
-                                            <img src="${p.images[0]}" alt="${p.tenSanPham}" class="product-img"/>
+                                        <c:when test="${fn:startsWith(p.hinhAnh, 'http')}">
+                                            <img src="${p.hinhAnh}" alt="${p.tenSanPham}" class="product-img"/>
                                         </c:when>
                                         <c:otherwise>
-                                            <img src="${pageContext.request.contextPath}/${p.images[0]}" alt="${p.tenSanPham}" class="product-img"/>
+                                            <img src="${pageContext.request.contextPath}/${p.hinhAnh}" alt="${p.tenSanPham}" class="product-img"/>
                                         </c:otherwise>
                                     </c:choose>
                                 </c:when>

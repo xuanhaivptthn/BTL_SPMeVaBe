@@ -25,6 +25,28 @@
         <main class="admin-content">
             <div class="admin-card">
                 <h2>Danh sách Sản phẩm</h2>
+                <div style="margin-bottom: 20px;">
+                    <form action="${pageContext.request.contextPath}/admin/products" method="get" style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <input type="text" name="search" value="${fn:escapeXml(search)}" class="form-control" placeholder="Tìm kiếm theo tên SP" style="max-width: 300px;"/>
+                        <select name="category" class="form-control" style="width: 200px;">
+                            <option value="">Tất cả danh mục</option>
+                            <option value="1" ${selectedCategory == '1' ? 'selected' : ''}>Mẹ bầu và sau sinh</option>
+                            <option value="2" ${selectedCategory == '2' ? 'selected' : ''}>Sữa cho bé</option>
+                            <option value="3" ${selectedCategory == '3' ? 'selected' : ''}>Bé ăn dặm</option>
+                            <option value="4" ${selectedCategory == '4' ? 'selected' : ''}>Bỉm tã và vệ sinh</option>
+                            <option value="5" ${selectedCategory == '5' ? 'selected' : ''}>Bình sữa và phụ kiện</option>
+                            <option value="6" ${selectedCategory == '6' ? 'selected' : ''}>Đồ sơ sinh</option>
+                            <option value="7" ${selectedCategory == '7' ? 'selected' : ''}>Thời trang và phụ kiện</option>
+                            <option value="8" ${selectedCategory == '8' ? 'selected' : ''}>Vitamin và sức khỏe</option>
+                            <option value="9" ${selectedCategory == '9' ? 'selected' : ''}>Đồ dùng mẹ và bé</option>
+                            <option value="10" ${selectedCategory == '10' ? 'selected' : ''}>Giặt xả và Tắm gội</option>
+                            <option value="11" ${selectedCategory == '11' ? 'selected' : ''}>Đồ chơi và Học tập</option>
+                        </select>
+                        <input type="text" name="brand" value="${fn:escapeXml(selectedBrand)}" class="form-control" placeholder="Thương hiệu (vd: Moony, Meiji)" style="max-width: 200px;"/>
+                        <button type="submit" class="btn btn-secondary">Lọc</button>
+                        <a href="${pageContext.request.contextPath}/admin/products" class="btn">Xóa bộ lọc</a>
+                    </form>
+                </div>
                 <table class="table-modern">
                     <thead>
                         <tr>
@@ -45,13 +67,13 @@
                                 <td>${p.soLuong}</td>
                                 <td>
                                     <c:choose>
-                                        <c:when test="${not empty p.images}">
+                                        <c:when test="${not empty p.hinhAnh}">
                                             <c:choose>
-                                                <c:when test="${fn:startsWith(p.images[0], 'http')}">
-                                                    <img src="${p.images[0]}" alt="${p.tenSanPham}" width="80" style="border-radius: var(--radius)"/>
+                                                <c:when test="${fn:startsWith(p.hinhAnh, 'http')}">
+                                                    <img src="${p.hinhAnh}" alt="${p.tenSanPham}" width="80" style="border-radius: var(--radius)"/>
                                                 </c:when>
                                                 <c:otherwise>
-                                                    <img src="${pageContext.request.contextPath}/${p.images[0]}" alt="${p.tenSanPham}" width="80" style="border-radius: var(--radius)"/>
+                                                    <img src="${pageContext.request.contextPath}/${p.hinhAnh}" alt="${p.tenSanPham}" width="80" style="border-radius: var(--radius)"/>
                                                 </c:otherwise>
                                             </c:choose>
                                         </c:when>
@@ -65,7 +87,7 @@
                                             data-price="${p.giaTien}"
                                             data-qty="${p.soLuong}"
                                             data-info="${fn:escapeXml(p.thongTinSanPham)}"
-                                            data-image="${not empty p.images ? p.images[0] : ''}"
+                                            data-image="${p.hinhAnh}"
                                             onclick="editProduct(this)">Sửa</button>
                                     <form action="${pageContext.request.contextPath}/admin/products" method="post" style="display:inline;">
                                         <input type="hidden" name="action" value="delete"/>

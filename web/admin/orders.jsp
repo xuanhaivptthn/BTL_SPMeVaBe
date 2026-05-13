@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html>
@@ -26,6 +27,15 @@
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                     <h2 style="margin: 0;">Danh sách Đơn hàng</h2>
                     <a href="${pageContext.request.contextPath}/admin/order_add.jsp" class="btn btn-secondary">Thêm Đơn Hàng Mới</a>
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <form action="${pageContext.request.contextPath}/admin/orders" method="get" style="display: flex; gap: 10px;">
+                        <input type="text" name="donHangId" value="${fn:escapeXml(searchDonHangId)}" class="form-control" placeholder="Mã đơn hàng" style="max-width: 200px;"/>
+                        <input type="text" name="khachHangId" value="${fn:escapeXml(searchKhachHangId)}" class="form-control" placeholder="Mã khách hàng" style="max-width: 200px;"/>
+                        <button type="submit" class="btn btn-secondary">Lọc</button>
+                        <a href="${pageContext.request.contextPath}/admin/orders" class="btn">Xóa bộ lọc</a>
+                    </form>
                 </div>
                 <table class="table-modern">
                     <thead>

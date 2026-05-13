@@ -30,6 +30,10 @@
                         <li><label><input type="checkbox" name="category" value="5" ${selectedCategories.contains('5') ? 'checked' : ''}> Bình sữa và phụ kiện</label></li>
                         <li><label><input type="checkbox" name="category" value="6" ${selectedCategories.contains('6') ? 'checked' : ''}> Đồ sơ sinh</label></li>
                         <li><label><input type="checkbox" name="category" value="7" ${selectedCategories.contains('7') ? 'checked' : ''}> Thời trang và phụ kiện</label></li>
+                        <li><label><input type="checkbox" name="category" value="8" ${selectedCategories.contains('8') ? 'checked' : ''}> Vitamin và sức khỏe</label></li>
+                        <li><label><input type="checkbox" name="category" value="9" ${selectedCategories.contains('9') ? 'checked' : ''}> Đồ dùng mẹ và bé</label></li>
+                        <li><label><input type="checkbox" name="category" value="10" ${selectedCategories.contains('10') ? 'checked' : ''}> Giặt xả và Tắm gội</label></li>
+                        <li><label><input type="checkbox" name="category" value="11" ${selectedCategories.contains('11') ? 'checked' : ''}> Đồ chơi và Học tập</label></li>
                     </ul>
                 </div>
 
@@ -83,17 +87,15 @@
                             <a href="${pageContext.request.contextPath}/product-detail?id=${p.maSanPham}" class="product-card-link">
                                 <div class="product-card">
                                     <c:choose>
-                                        <c:when test="${not empty p.images}">
-                                            <c:forEach var="img" items="${p.images}" begin="0" end="0">
-                                                <c:choose>
-                                                    <c:when test="${fn:startsWith(img, 'http')}">
-                                                        <img src="${img}" alt="${p.tenSanPham}" class="product-img"/>
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <img src="${pageContext.request.contextPath}/${img}" alt="${p.tenSanPham}" class="product-img"/>
-                                                    </c:otherwise>
-                                                </c:choose>
-                                            </c:forEach>
+                                        <c:when test="${not empty p.hinhAnh}">
+                                            <c:choose>
+                                                <c:when test="${fn:startsWith(p.hinhAnh, 'http')}">
+                                                    <img src="${p.hinhAnh}" alt="${p.tenSanPham}" class="product-img"/>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <img src="${pageContext.request.contextPath}/${p.hinhAnh}" alt="${p.tenSanPham}" class="product-img"/>
+                                                </c:otherwise>
+                                            </c:choose>
                                         </c:when>
                                         <c:otherwise>
                                             <p>(Chưa có ảnh)</p>

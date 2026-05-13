@@ -16,8 +16,15 @@ public class AdminUserServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String search = request.getParameter("search");
         NguoiDungDAO dao = new NguoiDungDAO();
-        List<NguoiDung> list = dao.getAll();
+        List<NguoiDung> list;
+        if (search != null && !search.trim().isEmpty()) {
+            list = dao.getFilteredUsers(search);
+            request.setAttribute("search", search);
+        } else {
+            list = dao.getAll();
+        }
         request.setAttribute("users", list);
         request.getRequestDispatcher("/admin/users.jsp").forward(request, response);
     }

@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS SanPham (
   MaSanPham INT AUTO_INCREMENT PRIMARY KEY,
   TenSanPham VARCHAR(255) NOT NULL,
   ThongTinSanPham TEXT,
+  hinhAnh VARCHAR(1024),
   thanhPhan TEXT,
   xuatXu VARCHAR(255),
   khoiLuong VARCHAR(255),
@@ -49,16 +50,6 @@ CREATE TABLE IF NOT EXISTS NhanVien (
   maNhanVien VARCHAR(50) UNIQUE,
   chucVu VARCHAR(255),
   FOREIGN KEY (id) REFERENCES NguoiDung(id) ON DELETE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS AnhSanPham (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  product_MaSanPham INT NOT NULL,
-  url VARCHAR(1024) NOT NULL,
-  altText VARCHAR(255),
-  sortOrder INT DEFAULT 0,
-  createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (product_MaSanPham) REFERENCES SanPham(MaSanPham) ON DELETE CASCADE
 );
 
 -- Table DonHang
@@ -212,12 +203,11 @@ INSERT INTO SanPham (TenSanPham, ThongTinSanPham, GiaTien, SoLuong, danhMucId) V
 ('Bảng vẽ tự xóa', 'Bảng LCD vẽ tự xóa', 90000, 60, 11),
 ('Bộ học chữ số', 'Thẻ flashcard số và chữ', 85000, 70, 11);
 
-INSERT INTO AnhSanPham (product_MaSanPham, url, sortOrder) VALUES 
-(1, 'https://dummyimage.com/300x300/e0e0e0/000000.png&text=SP1', 0),
-(2, 'https://dummyimage.com/300x300/e0e0e0/000000.png&text=SP2', 0),
-(3, 'https://dummyimage.com/300x300/e0e0e0/000000.png&text=SP3', 0),
-(4, 'https://dummyimage.com/300x300/e0e0e0/000000.png&text=SP4', 0),
-(5, 'https://dummyimage.com/300x300/e0e0e0/000000.png&text=SP5', 0);
+UPDATE SanPham SET hinhAnh = 'https://dummyimage.com/300x300/e0e0e0/000000.png&text=SP1' WHERE MaSanPham = 1;
+UPDATE SanPham SET hinhAnh = 'https://dummyimage.com/300x300/e0e0e0/000000.png&text=SP2' WHERE MaSanPham = 2;
+UPDATE SanPham SET hinhAnh = 'https://dummyimage.com/300x300/e0e0e0/000000.png&text=SP3' WHERE MaSanPham = 3;
+UPDATE SanPham SET hinhAnh = 'https://dummyimage.com/300x300/e0e0e0/000000.png&text=SP4' WHERE MaSanPham = 4;
+UPDATE SanPham SET hinhAnh = 'https://dummyimage.com/300x300/e0e0e0/000000.png&text=SP5' WHERE MaSanPham = 5;
 
 INSERT INTO DonHang (khachHangId, tongTien, trangThai, diaChiGiaoHang) VALUES 
 (1, 600000, 'PENDING', 'Số 1, Đường 2, Phường 3, Quận 4');

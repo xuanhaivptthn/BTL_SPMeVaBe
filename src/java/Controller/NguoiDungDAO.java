@@ -57,6 +57,42 @@ public class NguoiDungDAO {
         return list;
     }
 
+    public List<NguoiDung> getFilteredUsers(String keyword) {
+        List<NguoiDung> list = new ArrayList<>();
+        String sql = "SELECT id, hoTen, email, dienThoai, tenDangNhap, role, status FROM NguoiDung WHERE is_deleted = 0";
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            sql += " AND (id LIKE ? OR hoTen LIKE ? OR email LIKE ? OR dienThoai LIKE ?)";
+        }
+        try (Connection conn = DBConnect.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            if (keyword != null && !keyword.trim().isEmpty()) {
+                String likeKeyword = "%" + keyword.trim() + "%";
+                ps.setString(1, likeKeyword);
+                ps.setString(2, likeKeyword);
+                ps.setString(3, likeKeyword);
+                ps.setString(4, likeKeyword);
+            }
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    NguoiDung nd = new NguoiDung();
+                    nd.setId(rs.getInt("id"));
+                    nd.setHoTen(rs.getString("hoTen"));
+                    nd.setEmail(rs.getString("email"));
+                    nd.setDienThoai(rs.getString("dienThoai"));
+                    nd.setTenDangNhap(rs.getString("tenDangNhap"));
+                    nd.setRole(rs.getString("role"));
+                    nd.setStatus(rs.getString("status"));
+                    list.add(nd);
+                }
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return list;
+    }
+
     public NguoiDung getById(int id) {
         String sql = "SELECT id, hoTen, email, dienThoai, tenDangNhap, role, status FROM NguoiDung WHERE id = ? AND is_deleted = 0";
         try (Connection conn = DBConnect.getConnection();

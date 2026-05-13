@@ -112,6 +112,60 @@ public class DonHangDAO {
         return list;
     }
     
+    public List<DonHang> getFilteredOrders(String khachHangId, String donHangId) {
+        List<DonHang> list = new ArrayList<>();
+        StringBuilder sql = new StringBuilder("SELECT id, khachHangId, ngayDat, tongTien, trangThai, tenNguoiNhan, sdtNhanHang, diaChiGiaoHang, ghiChu FROM DonHang WHERE is_deleted = 0");
+        List<Object> params = new ArrayList<>();
+        
+        if (khachHangId != null && !khachHangId.trim().isEmpty()) {
+            sql.append(" AND khachHangId = ?");
+            try {
+                params.add(Integer.parseInt(khachHangId.trim()));
+            } catch (Exception e) {
+                params.add(-1);
+            }
+        }
+        
+        if (donHangId != null && !donHangId.trim().isEmpty()) {
+            sql.append(" AND id = ?");
+            try {
+                params.add(Integer.parseInt(donHangId.trim()));
+            } catch (Exception e) {
+                params.add(-1);
+            }
+        }
+        
+        sql.append(" ORDER BY ngayDat DESC");
+        
+        try (Connection conn = DBConnect.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+             
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+             
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    DonHang dh = new DonHang();
+                    dh.setId(rs.getInt("id"));
+                    dh.setKhachHangId(rs.getInt("khachHangId"));
+                    Timestamp t = rs.getTimestamp("ngayDat");
+                    if (t != null) dh.setNgayDat(t.toLocalDateTime());
+                    dh.setTongTien(rs.getDouble("tongTien"));
+                    dh.setTrangThai(rs.getString("trangThai"));
+                    dh.setTenNguoiNhan(rs.getString("tenNguoiNhan"));
+                    dh.setSdtNhanHang(rs.getString("sdtNhanHang"));
+                    dh.setDiaChiGiaoHang(rs.getString("diaChiGiaoHang"));
+                    dh.setGhiChu(rs.getString("ghiChu"));
+                    list.add(dh);
+                }
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return list;
+    }
+
     public boolean updateStatus(int donHangId, String status) {
         String sql = "UPDATE DonHang SET trangThai = ? WHERE id = ?";
         try (Connection conn = DBConnect.getConnection();
