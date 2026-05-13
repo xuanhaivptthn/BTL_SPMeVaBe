@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="Controller.SanPhamDAO" %>
@@ -49,7 +50,7 @@
                                     <c:otherwise>Không có ảnh</c:otherwise>
                                 </c:choose>
                             </td>
-                            <td><c:out value="${item.product.giaTien}"/></td>
+                            <td><fmt:formatNumber value="${item.product.giaTien}" type="number" pattern="#,###"/></td>
                             <td>
                                 <form action="${pageContext.request.contextPath}/cart" method="post" style="display:inline;">
                                     <input type="hidden" name="action" value="update"/>
@@ -58,7 +59,7 @@
                                     <button type="submit" class="btn btn-secondary" style="padding: 5px 10px; font-size: 14px;">Cập nhật</button>
                                 </form>
                             </td>
-                            <td><c:out value="${item.product.giaTien * item.quantity}"/></td>
+                            <td><fmt:formatNumber value="${item.product.giaTien * item.quantity}" type="number" pattern="#,###"/></td>
                             <td>
                                 <form action="${pageContext.request.contextPath}/cart" method="post" style="display:inline;">
                                     <input type="hidden" name="action" value="remove"/>
@@ -70,7 +71,7 @@
                     </c:forEach>
                 </tbody>
             </table>
-            <h3>Tổng tiền: <c:out value="${totalPrice}"/> VND</h3>
+            <h3>Tổng tiền: <fmt:formatNumber value="${totalPrice}" type="number" pattern="#,###"/> VND</h3>
             <div class="mt-20">
                 <a href="${pageContext.request.contextPath}/checkout" class="btn">Tiến hành thanh toán</a>
             </div>

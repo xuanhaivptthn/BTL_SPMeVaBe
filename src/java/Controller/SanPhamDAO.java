@@ -152,4 +152,72 @@ public class SanPhamDAO {
             return false;
         }
     }
+
+    public List<SanPham> getFilteredProducts(String search, String[] categories, String[] brands, String sort) {
+        List<SanPham> list = new ArrayList<>();
+        StringBuilder sql = new StringBuilder("SELECT MaSanPham, TenSanPham, ThongTinSanPham, GiaTien, SoLuong FROM SanPham WHERE is_deleted = 0");
+        List<Object> params = new ArrayList<>();
+
+        if (search != null && !search.trim().isEmpty()) {
+            sql.append(" AND (TenSanPham LIKE ? OR ThongTinSanPham LIKE ?)");
+            params.add("%" + search.trim() + "%");
+            params.add("%" + search.trim() + "%");
+        }
+
+        if (categories != null && categories.length > 0) {
+            sql.append(" AND danhMucId IN (");
+            for (int i = 0; i < categories.length; i++) {
+                sql.append("?");
+                if (i < categories.length - 1) sql.append(",");
+                try {
+                    params.add(Integer.parseInt(categories[i]));
+                } catch (NumberFormatException e) {
+                    params.add(-1); // invalid category
+                }
+            }
+            sql.append(")");
+        }
+
+        if (brands != null && brands.length > 0) {
+            sql.append(" AND (");
+            for (int i = 0; i < brands.length; i++) {
+                sql.append("LOWER(TenSanPham) LIKE ?");
+                if (i < brands.length - 1) sql.append(" OR ");
+                params.add("%" + brands[i].toLowerCase() + "%");
+            }
+            sql.append(")");
+        }
+
+        if ("price_asc".equals(sort)) {
+            sql.append(" ORDER BY GiaTien ASC");
+        } else if ("price_desc".equals(sort)) {
+            sql.append(" ORDER BY GiaTien DESC");
+        } else {
+            sql.append(" ORDER BY MaSanPham DESC");
+        }
+
+        try (Connection conn = DBConnect.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+             
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    SanPham p = new SanPham();
+                    p.setMaSanPham(rs.getInt("MaSanPham"));
+                    p.setTenSanPham(rs.getString("TenSanPham"));
+                    p.setThongTinSanPham(rs.getString("ThongTinSanPham"));
+                    p.setGiaTien(rs.getDouble("GiaTien"));
+                    p.setSoLuong(rs.getInt("SoLuong"));
+                    p.setImages(loadImages(conn, p.getMaSanPham()));
+                    list.add(p);
+                }
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return list;
+    }
 }

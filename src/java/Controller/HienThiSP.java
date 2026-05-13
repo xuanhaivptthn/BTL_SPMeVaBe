@@ -58,13 +58,21 @@ public class HienThiSP extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String dbName = getServletContext().getInitParameter("dbName");
-        if (dbName == null || dbName.isEmpty()) {
-            dbName = "QLBanHang"; // default - change as needed
-        }
+        
+        String search = request.getParameter("search");
+        String[] categories = request.getParameterValues("category");
+        String[] brands = request.getParameterValues("brand");
+        String sort = request.getParameter("sort");
+
         SanPhamDAO dao = new SanPhamDAO();
-        List<SanPham> products = dao.getAll();
+        List<SanPham> products = dao.getFilteredProducts(search, categories, brands, sort);
+        
+        List<String> selectedCategories = (categories != null) ? java.util.Arrays.asList(categories) : new java.util.ArrayList<>();
+        List<String> selectedBrands = (brands != null) ? java.util.Arrays.asList(brands) : new java.util.ArrayList<>();
+
         request.setAttribute("products", products);
+        request.setAttribute("selectedCategories", selectedCategories);
+        request.setAttribute("selectedBrands", selectedBrands);
         request.getRequestDispatcher("/products.jsp").forward(request, response);
     }
 
