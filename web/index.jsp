@@ -9,14 +9,11 @@
     <jsp:include page="components/header.jsp" />
 
     <div>
-        <h2>Chào mừng đến với Cửa Hàng Mẹ & Bé</h2>
-        <p>Cung cấp các sản phẩm tốt nhất cho mẹ và bé yêu của bạn.</p>
-        
-        <div>
-            <h3>Sản phẩm nổi bật</h3>
-            <!-- TODO: Có thể fetch sản phẩm từ DB ở HomeServlet -->
-            <p><a href="${pageContext.request.contextPath}/products">Xem tất cả sản phẩm</a></p>
-        </div>
+        <div class="text-center mt-20" style="padding: 50px 0; background: #fff; border-radius: var(--radius); border: 1px solid var(--border-color); box-shadow: var(--shadow-sm);">
+        <h2 style="font-size: 32px; color: var(--primary-color);">Chào mừng đến với Cửa Hàng Mẹ và Bé</h2>
+        <p style="font-size: 18px; color: #555; margin-bottom: 30px;">Chuyên cung cấp các sản phẩm chất lượng, an toàn cho mẹ và bé yêu của bạn.</p>
+        <a href="${pageContext.request.contextPath}/products" class="btn" style="font-size: 18px; padding: 15px 30px;">Xem sản phẩm ngay</a>
+    </div>    </div>
     </div>
 
     <jsp:include page="components/footer.jsp" />

@@ -17,6 +17,32 @@ public class CartServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        
+        Model.NguoiDung user = (Model.NguoiDung) session.getAttribute("user");
+        if (user == null || "ADMIN".equals(user.getRole()) || "STAFF".equals(user.getRole())) {
+            session.setAttribute("redirectAfterLogin", "/cart");
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
+
+        Map<Integer, Integer> cart = (Map<Integer, Integer>) session.getAttribute("cart");
+        java.util.List<Model.CartItem> cartProducts = new java.util.ArrayList<>();
+        double totalPrice = 0;
+        
+        if (cart != null && !cart.isEmpty()) {
+            Controller.SanPhamDAO dao = new Controller.SanPhamDAO();
+            for (Map.Entry<Integer, Integer> entry : cart.entrySet()) {
+                Model.SanPham sp = dao.getById(entry.getKey());
+                if (sp != null) {
+                    cartProducts.add(new Model.CartItem(sp, entry.getValue()));
+                    totalPrice += sp.getGiaTien() * entry.getValue();
+                }
+            }
+        }
+        
+        request.setAttribute("cartProducts", cartProducts);
+        request.setAttribute("totalPrice", totalPrice);
         request.getRequestDispatcher("/cart.jsp").forward(request, response);
     }
 
@@ -26,6 +52,13 @@ public class CartServlet extends HttpServlet {
         String action = request.getParameter("action");
         HttpSession session = request.getSession();
         
+        Model.NguoiDung user = (Model.NguoiDung) session.getAttribute("user");
+        if (user == null || "ADMIN".equals(user.getRole()) || "STAFF".equals(user.getRole())) {
+            session.setAttribute("redirectAfterLogin", "/products");
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
+
         // Cart map: productId -> quantity
         Map<Integer, Integer> cart = (Map<Integer, Integer>) session.getAttribute("cart");
         if (cart == null) {

@@ -14,14 +14,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-@WebServlet(name = "CheckoutServlet", urlPatterns = {"/checkout"})
+@WebServlet(name = "CheckoutServlet", urlPatterns = { "/checkout" })
 public class CheckoutServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-        
+
         Model.NguoiDung user = (Model.NguoiDung) session.getAttribute("user");
         if (user == null || "ADMIN".equals(user.getRole()) || "STAFF".equals(user.getRole())) {
             session.setAttribute("redirectAfterLogin", "/cart");
@@ -43,7 +43,7 @@ public class CheckoutServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         HttpSession session = request.getSession();
         Map<Integer, Integer> cart = (Map<Integer, Integer>) session.getAttribute("cart");
-        
+
         if (cart == null || cart.isEmpty()) {
             response.sendRedirect(request.getContextPath() + "/cart");
             return;
@@ -51,7 +51,7 @@ public class CheckoutServlet extends HttpServlet {
 
         String diaChi = request.getParameter("diaChiGiaoHang");
         String ghiChu = request.getParameter("ghiChu");
-        
+
         // Lấy Khách Hàng đang đăng nhập
         Model.NguoiDung user = (Model.NguoiDung) session.getAttribute("user");
         if (user == null || "ADMIN".equals(user.getRole()) || "STAFF".equals(user.getRole())) {
@@ -60,11 +60,11 @@ public class CheckoutServlet extends HttpServlet {
             return;
         }
         int khachHangId = user.getId();
-        
+
         SanPhamDAO spDao = new SanPhamDAO();
         double tongTien = 0;
         List<ChiTietDonHang> chiTietList = new ArrayList<>();
-        
+
         for (Map.Entry<Integer, Integer> entry : cart.entrySet()) {
             int spId = entry.getKey();
             int sl = entry.getValue();
@@ -78,22 +78,23 @@ public class CheckoutServlet extends HttpServlet {
                 chiTietList.add(ct);
             }
         }
-        
+
         DonHang dh = new DonHang();
         dh.setKhachHangId(khachHangId);
         dh.setTongTien(tongTien);
         dh.setTrangThai("PENDING");
         dh.setDiaChiGiaoHang(diaChi);
         dh.setGhiChu(ghiChu);
-        
+
         DonHangDAO dhDao = new DonHangDAO();
         boolean success = dhDao.insert(dh, chiTietList);
-        
+
         if (success) {
             session.removeAttribute("cart");
-            response.getWriter().println("<h1>Dat hang thanh cong!</h1><a href='"+request.getContextPath()+"/'>Ve trang chu</a>");
+            response.sendRedirect(request.getContextPath() + "/order_success.jsp");
         } else {
-            response.getWriter().println("<h1>Dat hang that bai!</h1><a href='"+request.getContextPath()+"/cart'>Quay lai</a>");
+            session.setAttribute("error", "Đặt hàng thất bại. Vui lòng thử lại.");
+            response.sendRedirect(request.getContextPath() + "/cart");
         }
     }
 }

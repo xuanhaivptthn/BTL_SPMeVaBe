@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="Controller.SanPhamDAO" %>
@@ -13,62 +14,68 @@
     <jsp:include page="components/header.jsp" />
 
     <h2>Giỏ hàng của bạn</h2>
-
-    <%
-        Map<Integer, Integer> cart = (Map<Integer, Integer>) session.getAttribute("cart");
-        if (cart == null || cart.isEmpty()) {
-            out.println("<p>Giỏ hàng trống.</p>");
-        } else {
-            SanPhamDAO dao = new SanPhamDAO();
-            double tongCong = 0;
-    %>
-        <table border="1" cellpadding="10" cellspacing="0">
-            <tr>
-                <th>Tên sản phẩm</th>
-                <th>Giá</th>
-                <th>Số lượng</th>
-                <th>Thành tiền</th>
-                <th>Hành động</th>
-            </tr>
-            <%
-                for (Map.Entry<Integer, Integer> entry : cart.entrySet()) {
-                    int productId = entry.getKey();
-                    int quantity = entry.getValue();
-                    SanPham sp = dao.getById(productId);
-                    if (sp != null) {
-                        double thanhTien = sp.getGiaTien() * quantity;
-                        tongCong += thanhTien;
-            %>
-            <tr>
-                <td><%= sp.getTenSanPham() %></td>
-                <td><%= sp.getGiaTien() %></td>
-                <td>
-                    <form action="${pageContext.request.contextPath}/cart" method="post" style="display:inline;">
-                        <input type="hidden" name="action" value="update"/>
-                        <input type="hidden" name="productId" value="<%= productId %>"/>
-                        <input type="number" name="quantity" value="<%= quantity %>" min="1" style="width: 50px;"/>
-                        <button type="submit">Cập nhật</button>
-                    </form>
-                </td>
-                <td><%= thanhTien %></td>
-                <td>
-                    <form action="${pageContext.request.contextPath}/cart" method="post" style="display:inline;">
-                        <input type="hidden" name="action" value="remove"/>
-                        <input type="hidden" name="productId" value="<%= productId %>"/>
-                        <button type="submit">Xoá</button>
-                    </form>
-                </td>
-            </tr>
-            <%
-                    }
-                }
-            %>
-        </table>
-        <h3>Tổng cộng: <%= tongCong %> VND</h3>
-        <p><a href="${pageContext.request.contextPath}/checkout">Tiến hành thanh toán</a></p>
-    <%
-        }
-    %>
+    <c:choose>
+        <c:when test="${empty cartProducts}">
+            <p>Giỏ hàng đang trống. <a href="${pageContext.request.contextPath}/products">Tiếp tục mua sắm</a></p>
+        </c:when>
+        <c:otherwise>
+            <table class="table-modern">
+                <thead>
+                    <tr>
+                        <th>Sản phẩm</th>
+                        <th>Hình ảnh</th>
+                        <th>Đơn giá</th>
+                        <th>Số lượng</th>
+                        <th>Thành tiền</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <c:forEach var="item" items="${cartProducts}">
+                        <tr>
+                            <td><c:out value="${item.product.tenSanPham}"/></td>
+                            <td>
+                                <c:choose>
+                                    <c:when test="${not empty item.product.images}">
+                                        <c:choose>
+                                            <c:when test="${fn:startsWith(item.product.images[0], 'http')}">
+                                                <img src="${item.product.images[0]}" alt="img" class="product-img" style="width:80px; height:80px;"/>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <img src="${pageContext.request.contextPath}/${item.product.images[0]}" alt="img" class="product-img" style="width:80px; height:80px;"/>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </c:when>
+                                    <c:otherwise>Không có ảnh</c:otherwise>
+                                </c:choose>
+                            </td>
+                            <td><c:out value="${item.product.giaTien}"/></td>
+                            <td>
+                                <form action="${pageContext.request.contextPath}/cart" method="post" style="display:inline;">
+                                    <input type="hidden" name="action" value="update"/>
+                                    <input type="hidden" name="productId" value="${item.product.maSanPham}"/>
+                                    <input type="number" name="quantity" value="${item.quantity}" min="1" class="form-control" style="width:70px; display:inline-block; padding: 5px;"/>
+                                    <button type="submit" class="btn btn-secondary" style="padding: 5px 10px; font-size: 14px;">Cập nhật</button>
+                                </form>
+                            </td>
+                            <td><c:out value="${item.product.giaTien * item.quantity}"/></td>
+                            <td>
+                                <form action="${pageContext.request.contextPath}/cart" method="post" style="display:inline;">
+                                    <input type="hidden" name="action" value="remove"/>
+                                    <input type="hidden" name="productId" value="${item.product.maSanPham}"/>
+                                    <button type="submit" class="btn" style="background-color: #d9534f; padding: 5px 10px; font-size: 14px;">Xoá</button>
+                                </form>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                </tbody>
+            </table>
+            <h3>Tổng tiền: <c:out value="${totalPrice}"/> VND</h3>
+            <div class="mt-20">
+                <a href="${pageContext.request.contextPath}/checkout" class="btn">Tiến hành thanh toán</a>
+            </div>
+        </c:otherwise>
+    </c:choose>
 
     <jsp:include page="components/footer.jsp" />
 </body>

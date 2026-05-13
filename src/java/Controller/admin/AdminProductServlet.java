@@ -89,6 +89,50 @@ public class AdminProductServlet extends HttpServlet {
             }
 
             dao.insert(sp);
+        } else if ("update".equals(action)) {
+            int id = Integer.parseInt(request.getParameter("id"));
+            String name = request.getParameter("name");
+            String info = request.getParameter("info");
+            double price = Double.parseDouble(request.getParameter("price"));
+            int qty = Integer.parseInt(request.getParameter("quantity"));
+
+            SanPham sp = new SanPham();
+            sp.setMaSanPham(id);
+            sp.setTenSanPham(name);
+            sp.setThongTinSanPham(info);
+            sp.setGiaTien(price);
+            sp.setSoLuong(qty);
+            
+            Part filePart = request.getPart("imageFile");
+            if (filePart != null && filePart.getSize() > 0) {
+                String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+                fileName = System.currentTimeMillis() + "_" + fileName;
+                String applicationPath = request.getServletContext().getRealPath("");
+                String sourcePath = applicationPath.replace("build" + File.separator + "web", "web");
+                String uploadFilePath = sourcePath + File.separator + "uploads";
+                File uploadFolder = new File(uploadFilePath);
+                if (!uploadFolder.exists()) uploadFolder.mkdirs();
+                filePart.write(uploadFilePath + File.separator + fileName);
+                
+                String buildUploadPath = applicationPath + File.separator + "uploads";
+                File buildUploadFolder = new File(buildUploadPath);
+                if (!buildUploadFolder.exists()) buildUploadFolder.mkdirs();
+                filePart.write(buildUploadPath + File.separator + fileName);
+
+                sp.addImage("uploads/" + fileName);
+            } else {
+                String imageText = request.getParameter("imageText");
+                if (imageText != null && !imageText.trim().isEmpty()) {
+                    sp.addImage(imageText);
+                } else {
+                    SanPham oldSp = dao.getById(id);
+                    if(oldSp != null && oldSp.getImages() != null) {
+                        sp.setImages(oldSp.getImages());
+                    }
+                }
+            }
+
+            dao.update(sp);
         } else if ("delete".equals(action)) {
             int id = Integer.parseInt(request.getParameter("id"));
             dao.delete(id);

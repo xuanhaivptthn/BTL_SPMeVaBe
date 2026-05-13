@@ -9,6 +9,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import Model.ChiTietDonHang;
+import java.util.ArrayList;
 
 @WebServlet(name = "AdminOrderServlet", urlPatterns = {"/admin/orders"})
 public class AdminOrderServlet extends HttpServlet {
@@ -31,6 +33,52 @@ public class AdminOrderServlet extends HttpServlet {
             String status = request.getParameter("status");
             DonHangDAO dao = new DonHangDAO();
             dao.updateStatus(id, status);
+        } else if ("delete".equals(action)) {
+            int id = Integer.parseInt(request.getParameter("id"));
+            DonHangDAO dao = new DonHangDAO();
+            dao.delete(id);
+        } else if ("add".equals(action)) {
+            int khachHangId = Integer.parseInt(request.getParameter("khachHangId"));
+            String diaChiGiaoHang = request.getParameter("diaChiGiaoHang");
+            String ghiChu = request.getParameter("ghiChu");
+            String[] sanPhamIds = request.getParameterValues("sanPhamId[]");
+            String[] soLuongs = request.getParameterValues("soLuong[]");
+            
+            double tongTien = 0;
+            List<ChiTietDonHang> chiTietList = new ArrayList<>();
+            Controller.SanPhamDAO spDao = new Controller.SanPhamDAO();
+            
+            if (sanPhamIds != null && soLuongs != null) {
+                for (int i = 0; i < sanPhamIds.length; i++) {
+                    try {
+                        int spId = Integer.parseInt(sanPhamIds[i]);
+                        int sl = Integer.parseInt(soLuongs[i]);
+                        if (sl > 0) {
+                            Model.SanPham sp = spDao.getById(spId);
+                            if (sp != null) {
+                                ChiTietDonHang ct = new ChiTietDonHang();
+                                ct.setSanPhamId(spId);
+                                ct.setSoLuong(sl);
+                                ct.setDonGia(sp.getGiaTien());
+                                chiTietList.add(ct);
+                                tongTien += (sp.getGiaTien() * sl);
+                            }
+                        }
+                    } catch (NumberFormatException e) {
+                        // Bỏ qua dòng lỗi
+                    }
+                }
+            }
+            
+            DonHang dh = new DonHang();
+            dh.setKhachHangId(khachHangId);
+            dh.setDiaChiGiaoHang(diaChiGiaoHang);
+            dh.setGhiChu(ghiChu);
+            dh.setTongTien(tongTien);
+            dh.setTrangThai("PENDING");
+            
+            DonHangDAO dao = new DonHangDAO();
+            dao.insert(dh, chiTietList);
         }
         response.sendRedirect(request.getContextPath() + "/admin/orders");
     }

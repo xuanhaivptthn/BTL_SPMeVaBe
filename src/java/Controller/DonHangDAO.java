@@ -71,9 +71,21 @@ public class DonHangDAO {
         }
     }
 
+    public boolean delete(int id) {
+        String sql = "UPDATE DonHang SET is_deleted = 1 WHERE id = ?";
+        try (Connection conn = DBConnect.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
     public List<DonHang> getAll() {
         List<DonHang> list = new ArrayList<>();
-        String sql = "SELECT id, khachHangId, ngayDat, tongTien, trangThai, diaChiGiaoHang, ghiChu FROM DonHang ORDER BY ngayDat DESC";
+        String sql = "SELECT id, khachHangId, ngayDat, tongTien, trangThai, diaChiGiaoHang, ghiChu FROM DonHang WHERE is_deleted = 0 ORDER BY ngayDat DESC";
         try (Connection conn = DBConnect.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
@@ -111,7 +123,7 @@ public class DonHangDAO {
 
     public List<DonHang> getByKhachHangId(int khachHangId) {
         List<DonHang> list = new ArrayList<>();
-        String sql = "SELECT id, khachHangId, ngayDat, tongTien, trangThai, diaChiGiaoHang, ghiChu FROM DonHang WHERE khachHangId = ? ORDER BY ngayDat DESC";
+        String sql = "SELECT id, khachHangId, ngayDat, tongTien, trangThai, diaChiGiaoHang, ghiChu FROM DonHang WHERE khachHangId = ? AND is_deleted = 0 ORDER BY ngayDat DESC";
         try (Connection conn = DBConnect.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, khachHangId);

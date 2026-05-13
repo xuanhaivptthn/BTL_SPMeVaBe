@@ -1,0 +1,55 @@
+/* web/css/admin.css */
+body {
+    background-color: #f4f6f8; /* Nền admin hơi xám nhạt để nổi bật nội dung trắng */
+}
+
+.admin-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+.admin-sidebar {
+    width: 250px;
+    background-color: #fff;
+    border-right: 1px solid var(--border-color);
+    padding: 20px;
+}
+
+.admin-sidebar h2 {
+    color: var(--primary-color);
+    margin-bottom: 30px;
+    font-size: 20px;
+}
+
+.admin-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.admin-nav a {
+    color: var(--text-color);
+    font-weight: 600;
+    padding: 10px 15px;
+    border-radius: var(--radius);
+    transition: background-color 0.3s;
+}
+
+.admin-nav a:hover {
+    background-color: #f0f0f0;
+    color: var(--primary-color);
+}
+
+.admin-content {
+    flex: 1;
+    padding: 30px;
+    background-color: #f4f6f8;
+}
+
+.admin-card {
+    background: #fff;
+    padding: 20px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-color);
+}

@@ -16,7 +16,7 @@
             <p>Bạn chưa có đơn hàng nào.</p>
         </c:when>
         <c:otherwise>
-            <table border="1" cellpadding="10" cellspacing="0">
+            <table class="table-modern">
                 <thead>
                     <tr>
                         <th>Mã đơn hàng</th>

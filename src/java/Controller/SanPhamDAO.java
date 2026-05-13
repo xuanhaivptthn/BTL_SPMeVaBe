@@ -46,7 +46,7 @@ public class SanPhamDAO {
 
     public List<SanPham> getAll() {
         List<SanPham> list = new ArrayList<>();
-        String sql = "SELECT MaSanPham, TenSanPham, ThongTinSanPham, GiaTien, SoLuong FROM SanPham";
+        String sql = "SELECT MaSanPham, TenSanPham, ThongTinSanPham, GiaTien, SoLuong FROM SanPham WHERE is_deleted = 0";
         try (Connection conn = DBConnect.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
@@ -70,7 +70,7 @@ public class SanPhamDAO {
     }
 
     public SanPham getById(int id) {
-        String sql = "SELECT MaSanPham, TenSanPham, ThongTinSanPham, GiaTien, SoLuong FROM SanPham WHERE MaSanPham = ?";
+        String sql = "SELECT MaSanPham, TenSanPham, ThongTinSanPham, GiaTien, SoLuong FROM SanPham WHERE MaSanPham = ? AND is_deleted = 0";
         try (Connection conn = DBConnect.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);
@@ -142,7 +142,7 @@ public class SanPhamDAO {
     }
 
     public boolean delete(int id) {
-        String sql = "DELETE FROM SanPham WHERE MaSanPham = ?";
+        String sql = "UPDATE SanPham SET is_deleted = 1 WHERE MaSanPham = ?";
         try (Connection conn = DBConnect.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);

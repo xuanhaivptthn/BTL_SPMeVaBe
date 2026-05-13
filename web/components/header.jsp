@@ -1,11 +1,15 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<div>
-    <h1><a href="${pageContext.request.contextPath}/">Cửa Hàng Mẹ & Bé</a></h1>
-    <nav>
-        <a href="${pageContext.request.contextPath}/">Trang chủ</a> | 
-        <a href="${pageContext.request.contextPath}/products">Sản phẩm</a> | 
-        <a href="${pageContext.request.contextPath}/cart">Giỏ hàng</a> | 
+<head>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
+</head>
+<header class="header">
+    <div class="container">
+        <h1><a href="${pageContext.request.contextPath}/">Cửa Hàng Mẹ & Bé</a></h1>
+        <nav class="nav-links">
+            <a href="${pageContext.request.contextPath}/">Trang chủ</a>
+            <a href="${pageContext.request.contextPath}/products">Sản phẩm</a>
+            <a href="${pageContext.request.contextPath}/cart">Giỏ hàng</a>
         
         <c:choose>
             <c:when test="${not empty sessionScope.user}">
@@ -25,6 +29,7 @@
                 <a href="${pageContext.request.contextPath}/register">Đăng ký</a>
             </c:otherwise>
         </c:choose>
-    </nav>
-    <hr/>
-</div>
+        </nav>
+    </div>
+</header>
+<div class="container">
