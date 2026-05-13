@@ -51,13 +51,6 @@ public class CartServlet extends HttpServlet {
             throws ServletException, IOException {
         String action = request.getParameter("action");
         HttpSession session = request.getSession();
-        
-        Model.NguoiDung user = (Model.NguoiDung) session.getAttribute("user");
-        if (user == null || "ADMIN".equals(user.getRole()) || "STAFF".equals(user.getRole())) {
-            session.setAttribute("redirectAfterLogin", "/products");
-            response.sendRedirect(request.getContextPath() + "/login");
-            return;
-        }
 
         // Cart map: productId -> quantity
         Map<Integer, Integer> cart = (Map<Integer, Integer>) session.getAttribute("cart");
@@ -93,6 +86,13 @@ public class CartServlet extends HttpServlet {
             } catch (NumberFormatException e) {
                 // Ignore
             }
+        }
+        
+        Model.NguoiDung user = (Model.NguoiDung) session.getAttribute("user");
+        if (user == null || "ADMIN".equals(user.getRole()) || "STAFF".equals(user.getRole())) {
+            session.setAttribute("redirectAfterLogin", "/cart");
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
         }
 
         response.sendRedirect(request.getContextPath() + "/cart");

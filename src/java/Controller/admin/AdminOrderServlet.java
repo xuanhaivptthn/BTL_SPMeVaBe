@@ -39,6 +39,8 @@ public class AdminOrderServlet extends HttpServlet {
             dao.delete(id);
         } else if ("add".equals(action)) {
             int khachHangId = Integer.parseInt(request.getParameter("khachHangId"));
+            String tenNguoiNhan = request.getParameter("tenNguoiNhan");
+            String sdtNhanHang = request.getParameter("sdtNhanHang");
             String diaChiGiaoHang = request.getParameter("diaChiGiaoHang");
             String ghiChu = request.getParameter("ghiChu");
             String[] sanPhamIds = request.getParameterValues("sanPhamId[]");
@@ -72,6 +74,8 @@ public class AdminOrderServlet extends HttpServlet {
             
             DonHang dh = new DonHang();
             dh.setKhachHangId(khachHangId);
+            dh.setTenNguoiNhan(tenNguoiNhan);
+            dh.setSdtNhanHang(sdtNhanHang);
             dh.setDiaChiGiaoHang(diaChiGiaoHang);
             dh.setGhiChu(ghiChu);
             dh.setTongTien(tongTien);

@@ -8,6 +8,8 @@ public class DonHang {
     private LocalDateTime ngayDat;
     private double tongTien;
     private String trangThai;
+    private String tenNguoiNhan;
+    private String sdtNhanHang;
     private String diaChiGiaoHang;
     private String ghiChu;
 
@@ -58,6 +60,22 @@ public class DonHang {
 
     public void setTrangThai(String trangThai) {
         this.trangThai = trangThai;
+    }
+
+    public String getTenNguoiNhan() {
+        return tenNguoiNhan;
+    }
+
+    public void setTenNguoiNhan(String tenNguoiNhan) {
+        this.tenNguoiNhan = tenNguoiNhan;
+    }
+
+    public String getSdtNhanHang() {
+        return sdtNhanHang;
+    }
+
+    public void setSdtNhanHang(String sdtNhanHang) {
+        this.sdtNhanHang = sdtNhanHang;
     }
 
     public String getDiaChiGiaoHang() {

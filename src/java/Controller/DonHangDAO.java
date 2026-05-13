@@ -9,7 +9,7 @@ import java.util.List;
 public class DonHangDAO {
 
     public boolean insert(DonHang dh, List<ChiTietDonHang> chiTietList) {
-        String sqlDonHang = "INSERT INTO DonHang (khachHangId, tongTien, trangThai, diaChiGiaoHang, ghiChu) VALUES (?, ?, ?, ?, ?)";
+        String sqlDonHang = "INSERT INTO DonHang (khachHangId, tongTien, trangThai, tenNguoiNhan, sdtNhanHang, diaChiGiaoHang, ghiChu) VALUES (?, ?, ?, ?, ?, ?, ?)";
         String sqlChiTiet = "INSERT INTO ChiTietDonHang (donHangId, sanPhamId, soLuong, donGia) VALUES (?, ?, ?, ?)";
         
         Connection conn = null;
@@ -22,8 +22,10 @@ public class DonHangDAO {
                 psDH.setInt(1, dh.getKhachHangId());
                 psDH.setDouble(2, dh.getTongTien());
                 psDH.setString(3, dh.getTrangThai());
-                psDH.setString(4, dh.getDiaChiGiaoHang());
-                psDH.setString(5, dh.getGhiChu());
+                psDH.setString(4, dh.getTenNguoiNhan());
+                psDH.setString(5, dh.getSdtNhanHang());
+                psDH.setString(6, dh.getDiaChiGiaoHang());
+                psDH.setString(7, dh.getGhiChu());
                 psDH.executeUpdate();
                 
                 try (ResultSet keys = psDH.getGeneratedKeys()) {
@@ -85,7 +87,7 @@ public class DonHangDAO {
 
     public List<DonHang> getAll() {
         List<DonHang> list = new ArrayList<>();
-        String sql = "SELECT id, khachHangId, ngayDat, tongTien, trangThai, diaChiGiaoHang, ghiChu FROM DonHang WHERE is_deleted = 0 ORDER BY ngayDat DESC";
+        String sql = "SELECT id, khachHangId, ngayDat, tongTien, trangThai, tenNguoiNhan, sdtNhanHang, diaChiGiaoHang, ghiChu FROM DonHang WHERE is_deleted = 0 ORDER BY ngayDat DESC";
         try (Connection conn = DBConnect.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
@@ -98,6 +100,8 @@ public class DonHangDAO {
                 if (t != null) dh.setNgayDat(t.toLocalDateTime());
                 dh.setTongTien(rs.getDouble("tongTien"));
                 dh.setTrangThai(rs.getString("trangThai"));
+                dh.setTenNguoiNhan(rs.getString("tenNguoiNhan"));
+                dh.setSdtNhanHang(rs.getString("sdtNhanHang"));
                 dh.setDiaChiGiaoHang(rs.getString("diaChiGiaoHang"));
                 dh.setGhiChu(rs.getString("ghiChu"));
                 list.add(dh);
@@ -123,7 +127,7 @@ public class DonHangDAO {
 
     public List<DonHang> getByKhachHangId(int khachHangId) {
         List<DonHang> list = new ArrayList<>();
-        String sql = "SELECT id, khachHangId, ngayDat, tongTien, trangThai, diaChiGiaoHang, ghiChu FROM DonHang WHERE khachHangId = ? AND is_deleted = 0 ORDER BY ngayDat DESC";
+        String sql = "SELECT id, khachHangId, ngayDat, tongTien, trangThai, tenNguoiNhan, sdtNhanHang, diaChiGiaoHang, ghiChu FROM DonHang WHERE khachHangId = ? AND is_deleted = 0 ORDER BY ngayDat DESC";
         try (Connection conn = DBConnect.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, khachHangId);
@@ -136,6 +140,8 @@ public class DonHangDAO {
                     if (t != null) dh.setNgayDat(t.toLocalDateTime());
                     dh.setTongTien(rs.getDouble("tongTien"));
                     dh.setTrangThai(rs.getString("trangThai"));
+                    dh.setTenNguoiNhan(rs.getString("tenNguoiNhan"));
+                    dh.setSdtNhanHang(rs.getString("sdtNhanHang"));
                     dh.setDiaChiGiaoHang(rs.getString("diaChiGiaoHang"));
                     dh.setGhiChu(rs.getString("ghiChu"));
                     list.add(dh);

@@ -16,8 +16,12 @@ public class SanPham {
     private int MaSanPham;
     private String TenSanPham;
     private String ThongTinSanPham;
+    private String thanhPhan;
+    private String xuatXu;
+    private String khoiLuong;
     private double GiaTien;
     private int SoLuong;
+    private int danhMucId;
     private List<String> images = new ArrayList<>();
 
     public SanPham() {
@@ -77,6 +81,38 @@ public class SanPham {
 
     public void removeImage(String url) {
         this.images.remove(url);
+    }
+
+    public String getThanhPhan() {
+        return thanhPhan;
+    }
+
+    public void setThanhPhan(String thanhPhan) {
+        this.thanhPhan = thanhPhan;
+    }
+
+    public String getXuatXu() {
+        return xuatXu;
+    }
+
+    public void setXuatXu(String xuatXu) {
+        this.xuatXu = xuatXu;
+    }
+
+    public String getKhoiLuong() {
+        return khoiLuong;
+    }
+
+    public void setKhoiLuong(String khoiLuong) {
+        this.khoiLuong = khoiLuong;
+    }
+
+    public int getDanhMucId() {
+        return danhMucId;
+    }
+
+    public void setDanhMucId(int danhMucId) {
+        this.danhMucId = danhMucId;
     }
 
     @Override

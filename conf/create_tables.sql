@@ -10,6 +10,9 @@ CREATE TABLE IF NOT EXISTS SanPham (
   MaSanPham INT AUTO_INCREMENT PRIMARY KEY,
   TenSanPham VARCHAR(255) NOT NULL,
   ThongTinSanPham TEXT,
+  thanhPhan TEXT,
+  xuatXu VARCHAR(255),
+  khoiLuong VARCHAR(255),
   GiaTien DECIMAL(10,2) DEFAULT 0,
   SoLuong INT DEFAULT 0,
   danhMucId INT,
@@ -65,10 +68,24 @@ CREATE TABLE IF NOT EXISTS DonHang (
     ngayDat TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     tongTien DOUBLE NOT NULL,
     trangThai VARCHAR(50) DEFAULT 'PENDING',
+    tenNguoiNhan VARCHAR(255),
+    sdtNhanHang VARCHAR(50),
     diaChiGiaoHang VARCHAR(255),
     ghiChu TEXT,
     is_deleted TINYINT(1) DEFAULT 0,
     FOREIGN KEY (khachHangId) REFERENCES KhachHang(id)
+);
+
+-- Table DiaChiNhanHang
+CREATE TABLE IF NOT EXISTS DiaChiNhanHang (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    khachHangId INT NOT NULL,
+    tenNguoiNhan VARCHAR(255) NOT NULL,
+    soDienThoai VARCHAR(50) NOT NULL,
+    diaChi VARCHAR(255) NOT NULL,
+    is_default TINYINT(1) DEFAULT 0,
+    createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (khachHangId) REFERENCES KhachHang(id) ON DELETE CASCADE
 );
 
 -- Table ChiTietDonHang
@@ -80,6 +97,20 @@ CREATE TABLE IF NOT EXISTS ChiTietDonHang (
     donGia DOUBLE NOT NULL,
     FOREIGN KEY (donHangId) REFERENCES DonHang(id) ON DELETE CASCADE,
     FOREIGN KEY (sanPhamId) REFERENCES SanPham(MaSanPham)
+);
+
+-- Table DanhGia (Reviews)
+CREATE TABLE IF NOT EXISTS DanhGia (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    sanPhamId INT NOT NULL,
+    khachHangId INT,
+    hoTen VARCHAR(255),
+    diemDanhGia INT NOT NULL CHECK (diemDanhGia BETWEEN 1 AND 5),
+    binhLuan TEXT,
+    anDanh TINYINT(1) DEFAULT 0,
+    createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (sanPhamId) REFERENCES SanPham(MaSanPham) ON DELETE CASCADE,
+    FOREIGN KEY (khachHangId) REFERENCES KhachHang(id) ON DELETE SET NULL
 );
 
 -- Dữ liệu mẫu
@@ -194,3 +225,14 @@ INSERT INTO DonHang (khachHangId, tongTien, trangThai, diaChiGiaoHang) VALUES
 INSERT INTO ChiTietDonHang (donHangId, sanPhamId, soLuong, donGia) VALUES 
 (1, 1, 1, 250000),
 (1, 2, 1, 350000);
+
+-- Update sample data for SanPham details
+UPDATE SanPham SET thanhPhan = 'Sữa bột, DHA, ARA, Vitamin D3, Kẽm...', xuatXu = 'Nhật Bản', khoiLuong = '800g' WHERE MaSanPham = 1;
+UPDATE SanPham SET thanhPhan = 'Vải cotton 100%', xuatXu = 'Việt Nam', khoiLuong = '500g' WHERE MaSanPham = 2;
+
+-- Sample Reviews
+INSERT INTO DanhGia (sanPhamId, khachHangId, hoTen, diemDanhGia, binhLuan, anDanh) VALUES 
+(1, 1, 'Nguyễn Văn Khách', 5, 'Sữa rất thơm, dễ uống, mẹ bầu không bị nghén.', 0),
+(1, NULL, 'Trần Thị Bích', 4, 'Giá hơi cao nhưng chất lượng tốt.', 0),
+(1, 1, 'Nguyễn Văn Khách', 5, 'Giao hàng nhanh, đóng gói cẩn thận', 1),
+(2, NULL, 'Lê Văn C', 5, 'Gối ôm rất êm, ngủ ngon hơn hẳn.', 0);

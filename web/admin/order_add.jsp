@@ -30,6 +30,14 @@
                         <input type="number" name="khachHangId" class="form-control" required/>
                     </div>
                     <div class="form-group">
+                        <label>Tên người nhận:</label>
+                        <input type="text" name="tenNguoiNhan" class="form-control" required/>
+                    </div>
+                    <div class="form-group">
+                        <label>Số điện thoại:</label>
+                        <input type="text" name="sdtNhanHang" class="form-control" required/>
+                    </div>
+                    <div class="form-group">
                         <label>Địa chỉ giao hàng:</label>
                         <input type="text" name="diaChiGiaoHang" class="form-control" required/>
                     </div>

@@ -73,6 +73,7 @@
             </table>
             <h3>Tổng tiền: <fmt:formatNumber value="${totalPrice}" type="number" pattern="#,###"/> VND</h3>
             <div class="mt-20">
+                <a href="${pageContext.request.contextPath}/products" class="btn" style="background-color: #6c757d; margin-right: 10px;">Tham khảo các mặt hàng khác</a>
                 <a href="${pageContext.request.contextPath}/checkout" class="btn">Tiến hành thanh toán</a>
             </div>
         </c:otherwise>

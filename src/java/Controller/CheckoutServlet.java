@@ -3,6 +3,8 @@ package Controller;
 import Model.ChiTietDonHang;
 import Model.DonHang;
 import Model.SanPham;
+import Model.DiaChiNhanHang;
+import Controller.DiaChiNhanHangDAO;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +36,11 @@ public class CheckoutServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/cart");
             return;
         }
+        
+        DiaChiNhanHangDAO dcDao = new DiaChiNhanHangDAO();
+        List<Model.DiaChiNhanHang> listDiaChi = dcDao.getByKhachHangId(user.getId());
+        request.setAttribute("listDiaChi", listDiaChi);
+        
         request.getRequestDispatcher("/checkout.jsp").forward(request, response);
     }
 
@@ -49,8 +56,11 @@ public class CheckoutServlet extends HttpServlet {
             return;
         }
 
+        String tenNguoiNhan = request.getParameter("tenNguoiNhan");
+        String sdtNhanHang = request.getParameter("sdtNhanHang");
         String diaChi = request.getParameter("diaChiGiaoHang");
         String ghiChu = request.getParameter("ghiChu");
+        boolean saveAddress = "on".equals(request.getParameter("saveAddress"));
 
         // Lấy Khách Hàng đang đăng nhập
         Model.NguoiDung user = (Model.NguoiDung) session.getAttribute("user");
@@ -83,11 +93,25 @@ public class CheckoutServlet extends HttpServlet {
         dh.setKhachHangId(khachHangId);
         dh.setTongTien(tongTien);
         dh.setTrangThai("PENDING");
+        dh.setTenNguoiNhan(tenNguoiNhan);
+        dh.setSdtNhanHang(sdtNhanHang);
         dh.setDiaChiGiaoHang(diaChi);
         dh.setGhiChu(ghiChu);
 
         DonHangDAO dhDao = new DonHangDAO();
         boolean success = dhDao.insert(dh, chiTietList);
+        
+        if (success) {
+            // Luôn lưu địa chỉ này làm địa chỉ mặc định mới hoặc cập nhật
+            DiaChiNhanHangDAO dcDao = new DiaChiNhanHangDAO();
+            Model.DiaChiNhanHang dc = new Model.DiaChiNhanHang();
+            dc.setKhachHangId(khachHangId);
+            dc.setTenNguoiNhan(tenNguoiNhan);
+            dc.setSoDienThoai(sdtNhanHang);
+            dc.setDiaChi(diaChi);
+            dc.setDefault(true);
+            dcDao.insert(dc);
+        }
 
         if (success) {
             session.removeAttribute("cart");
