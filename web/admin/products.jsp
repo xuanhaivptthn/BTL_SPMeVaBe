@@ -88,6 +88,7 @@
                                             data-qty="${p.soLuong}"
                                             data-info="${fn:escapeXml(p.thongTinSanPham)}"
                                             data-image="${p.hinhAnh}"
+                                            data-category="${p.danhMucId}"
                                             onclick="editProduct(this)">Sửa</button>
                                     <form action="${pageContext.request.contextPath}/admin/products" method="post" style="display:inline;">
                                         <input type="hidden" name="action" value="delete"/>
@@ -125,6 +126,23 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        <label>Danh mục:</label>
+                        <select name="categoryId" class="form-control" required>
+                            <option value="">Chọn danh mục</option>
+                            <option value="1">Mẹ bầu và sau sinh</option>
+                            <option value="2">Sữa cho bé</option>
+                            <option value="3">Bé ăn dặm</option>
+                            <option value="4">Bỉm tã và vệ sinh</option>
+                            <option value="5">Bình sữa và phụ kiện</option>
+                            <option value="6">Đồ sơ sinh</option>
+                            <option value="7">Thời trang và phụ kiện</option>
+                            <option value="8">Vitamin và sức khỏe</option>
+                            <option value="9">Đồ dùng mẹ và bé</option>
+                            <option value="10">Giặt xả và Tắm gội</option>
+                            <option value="11">Đồ chơi và Học tập</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label>Upload File Ảnh:</label>
                         <input type="file" name="imageFile" class="form-control" accept="image/*"/>
                     </div>
@@ -148,6 +166,8 @@
             document.querySelector('input[name="price"]').value = btn.getAttribute('data-price');
             document.querySelector('input[name="quantity"]').value = btn.getAttribute('data-qty');
             document.querySelector('input[name="imageText"]').value = btn.getAttribute('data-image');
+            var cat = btn.getAttribute('data-category');
+            if(cat) document.querySelector('select[name="categoryId"]').value = cat;
             document.getElementById('submitBtn').innerText = 'Cập nhật';
             document.getElementById('cancelBtn').style.display = 'inline-block';
             window.scrollTo(0, document.getElementById('productForm').offsetTop);
@@ -158,6 +178,7 @@
             document.getElementById('formAction').value = 'add';
             document.getElementById('formId').value = '';
             document.getElementById('productForm').reset();
+            var sel = document.querySelector('select[name="categoryId"]'); if(sel) sel.value = '';
             document.getElementById('submitBtn').innerText = 'Thêm Sản Phẩm';
             document.getElementById('cancelBtn').style.display = 'none';
         }

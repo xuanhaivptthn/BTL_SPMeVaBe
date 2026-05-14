@@ -74,7 +74,16 @@ public class AdminProductServlet extends HttpServlet {
             sp.setThongTinSanPham(info);
             sp.setGiaTien(price);
             sp.setSoLuong(qty);
-            
+            String categoryParam = request.getParameter("categoryId");
+            try {
+                if (categoryParam != null && !categoryParam.trim().isEmpty()) {
+                    sp.setDanhMucId(Integer.parseInt(categoryParam));
+                } else {
+                    sp.setDanhMucId(1); // default to category 1 when not provided
+                }
+            } catch (NumberFormatException e) {
+                sp.setDanhMucId(1);
+            }
             // Xử lý Upload file ảnh
             Part filePart = request.getPart("imageFile");
             if (filePart != null && filePart.getSize() > 0) {
@@ -128,6 +137,14 @@ public class AdminProductServlet extends HttpServlet {
             sp.setThongTinSanPham(info);
             sp.setGiaTien(price);
             sp.setSoLuong(qty);
+            String categoryParam = request.getParameter("categoryId");
+            try {
+                if (categoryParam != null && !categoryParam.trim().isEmpty()) {
+                    sp.setDanhMucId(Integer.parseInt(categoryParam));
+                }
+            } catch (NumberFormatException e) {
+                // keep existing category if invalid
+            }
             
             Part filePart = request.getPart("imageFile");
             if (filePart != null && filePart.getSize() > 0) {
