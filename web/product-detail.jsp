@@ -52,18 +52,39 @@
                     <p>${product.thongTinSanPham}</p>
                 </div>
                 
-                <form action="${pageContext.request.contextPath}/cart" method="post" class="product-detail-cart-form">
-                    <input type="hidden" name="action" value="add"/>
-                    <input type="hidden" name="productId" value="${product.maSanPham}"/>
-                    <div class="quantity-selector">
-                        <label>Số lượng:</label>
-                        <input type="number" name="quantity" value="1" min="1" max="${product.soLuong}" class="form-control" style="width: 80px; display: inline-block;"/>
-                        <span class="stock-info">(${product.soLuong} sản phẩm có sẵn)</span>
-                    </div>
-                    <button type="submit" class="btn btn-large" ${product.soLuong <= 0 ? 'disabled' : ''}>
-                        <i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ hàng
-                    </button>
-                </form>
+                <c:choose>
+                    <c:when test="${product.soLuong > 0}">
+                        <form action="${pageContext.request.contextPath}/cart" method="post" class="product-detail-cart-form">
+                            <input type="hidden" name="action" value="add"/>
+                            <input type="hidden" name="productId" value="${product.maSanPham}"/>
+                            <div class="quantity-selector">
+                                <label>Số lượng:</label>
+                                <input type="number" name="quantity" value="1" min="1" max="${product.soLuong}" class="form-control" style="width: 80px; display: inline-block;"/>
+                                <span class="stock-info">(${product.soLuong} sản phẩm có sẵn)</span>
+                            </div>
+                            <button type="submit" class="btn btn-large">
+                                <i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ hàng
+                            </button>
+                        </form>
+                    </c:when>
+                    <c:otherwise>
+                        <div class="out-of-stock-block">
+                            <p class="alert-error">Sản phẩm hiện đang hết hàng.</p>
+                            <c:if test="${not empty sessionScope.subscribeMessage}">
+                                <p class="alert-success">${sessionScope.subscribeMessage}</p>
+                                <c:remove var="subscribeMessage" scope="session" />
+                            </c:if>
+                            <form action="${pageContext.request.contextPath}/subscribe-back-in-stock" method="post" class="subscribe-form">
+                                <input type="hidden" name="productId" value="${product.maSanPham}" />
+                                <div class="form-group">
+                                    <label>Nhập email để nhận thông báo khi có hàng:</label>
+                                    <input type="email" name="email" class="form-control" placeholder="you@example.com" required />
+                                </div>
+                                <button type="submit" class="btn">Đăng ký nhận thông báo</button>
+                            </form>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
             </div>
         </div>
 

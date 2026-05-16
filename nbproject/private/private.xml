@@ -3,27 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/gmtfarcb/Desktop/BTL_SPMeVaBe/src/java/Model/DonHang.java</file>
-            <file>file:/C:/Users/gmtfarcb/Desktop/BTL_SPMeVaBe/src/java/Model/KhachHang.java</file>
-            <file>file:/C:/Users/gmtfarcb/Desktop/BTL_SPMeVaBe/src/java/Model/NhanVien.java</file>
-            <file>file:/C:/Users/gmtfarcb/Desktop/BTL_SPMeVaBe/src/java/Model/Person.java</file>
-            <file>file:/C:/Users/gmtfarcb/Desktop/BTL_SPMeVaBe/src/java/Model/SanPham.java</file>
-            <file>file:/C:/Users/gmtfarcb/Desktop/BTL_SPMeVaBe/src/java/Controller/SanPhamDAO.java</file>
-            <file>file:/C:/Users/gmtfarcb/Desktop/BTL_SPMeVaBe/src/java/Controller/DBConnect.java</file>
-            <file>file:/C:/Users/gmtfarcb/Desktop/BTL_SPMeVaBe/src/java/Controller/KhachHangDAO.java</file>
-            <file>file:/C:/Users/gmtfarcb/Desktop/BTL_SPMeVaBe/src/java/Controller/HienThiSP.java</file>
-            <file>file:/C:/Users/gmtfarcb/Desktop/BTL_SPMeVaBe/web/admin/index.jsp</file>
-            <file>file:/C:/Users/gmtfarcb/Desktop/BTL_SPMeVaBe/web/admin/order_add.jsp</file>
-            <file>file:/C:/Users/gmtfarcb/Desktop/BTL_SPMeVaBe/web/admin/orders.jsp</file>
-            <file>file:/C:/Users/gmtfarcb/Desktop/BTL_SPMeVaBe/web/admin/products.jsp</file>
-            <file>file:/C:/Users/gmtfarcb/Desktop/BTL_SPMeVaBe/web/admin/users.jsp</file>
-            <file>file:/C:/Users/gmtfarcb/Desktop/BTL_SPMeVaBe/web/cart.jsp</file>
-            <file>file:/C:/Users/gmtfarcb/Desktop/BTL_SPMeVaBe/web/history.jsp</file>
-            <file>file:/C:/Users/gmtfarcb/Desktop/BTL_SPMeVaBe/web/checkout.jsp</file>
-            <file>file:/C:/Users/gmtfarcb/Desktop/BTL_SPMeVaBe/web/login.jsp</file>
-            <file>file:/C:/Users/gmtfarcb/Desktop/BTL_SPMeVaBe/web/order_success.jsp</file>
-            <file>file:/C:/Users/gmtfarcb/Desktop/BTL_SPMeVaBe/web/register.jsp</file>
-            <file>file:/C:/Users/gmtfarcb/Desktop/BTL_SPMeVaBe/web/products.jsp</file>
+            <file>file:/home/gmtfarcb/Desktop/BTL_SPMeVaBe/test/Test/DBConnectionTester.java</file>
+            <file>file:/home/gmtfarcb/Desktop/BTL_SPMeVaBe/web/components/footer.jsp</file>
+            <file>file:/home/gmtfarcb/Desktop/BTL_SPMeVaBe/web/components/header.jsp</file>
+            <file>file:/home/gmtfarcb/Desktop/BTL_SPMeVaBe/web/history.jsp</file>
         </group>
     </open-files>
 </project-private>

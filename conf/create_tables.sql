@@ -226,3 +226,12 @@ INSERT INTO DanhGia (sanPhamId, khachHangId, hoTen, diemDanhGia, binhLuan, anDan
 (1, NULL, 'Trần Thị Bích', 4, 'Giá hơi cao nhưng chất lượng tốt.', 0),
 (1, 1, 'Nguyễn Văn Khách', 5, 'Giao hàng nhanh, đóng gói cẩn thận', 1),
 (2, NULL, 'Lê Văn C', 5, 'Gối ôm rất êm, ngủ ngon hơn hẳn.', 0);
+
+-- Table for back-in-stock subscriptions
+CREATE TABLE IF NOT EXISTS BackInStockSubscription (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  productId INT NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (productId) REFERENCES SanPham(MaSanPham) ON DELETE CASCADE
+);

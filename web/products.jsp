@@ -103,6 +103,9 @@
                                     </c:choose>
                                     <h3><c:out value="${p.tenSanPham}"/></h3>
                                     <p class="product-price"><fmt:formatNumber value="${p.giaTien}" type="number" pattern="#,###"/> VND</p>
+                                    <c:if test="${p.soLuong <= 0}">
+                                        <span class="badge-out-of-stock">Hết hàng</span>
+                                    </c:if>
                                 </div>
                             </a>
                         </c:forEach>

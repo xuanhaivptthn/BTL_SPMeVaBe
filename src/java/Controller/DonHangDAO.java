@@ -37,6 +37,23 @@ public class DonHangDAO {
             }
             
             if (donHangId > 0 && chiTietList != null && !chiTietList.isEmpty()) {
+                // First, verify and decrement stock for each product
+                String sqlUpdateStock = "UPDATE SanPham SET SoLuong = SoLuong - ? WHERE MaSanPham = ? AND SoLuong >= ?";
+                try (PreparedStatement psUpdate = conn.prepareStatement(sqlUpdateStock)) {
+                    for (ChiTietDonHang ct : chiTietList) {
+                        psUpdate.setInt(1, ct.getSoLuong());
+                        psUpdate.setInt(2, ct.getSanPhamId());
+                        psUpdate.setInt(3, ct.getSoLuong());
+                        int affectedStock = psUpdate.executeUpdate();
+                        if (affectedStock == 0) {
+                            // Not enough stock for this product
+                            conn.rollback();
+                            return false;
+                        }
+                    }
+                }
+
+                // Then insert order items
                 try (PreparedStatement psCT = conn.prepareStatement(sqlChiTiet)) {
                     for (ChiTietDonHang ct : chiTietList) {
                         psCT.setInt(1, donHangId);

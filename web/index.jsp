@@ -6,7 +6,8 @@
     <title>Trang chủ - Cửa Hàng Mẹ & Bé</title>
 </head>
 <body>
-    <jsp:include page="components/header.jsp" />
+    <%--<jsp:include page="components/header.jsp" />--%>
+    <%@include file="components/header.jsp" %>
 
     <div>
         <div class="text-center mt-20" style="padding: 50px 0; background: #fff; border-radius: var(--radius); border: 1px solid var(--border-color); box-shadow: var(--shadow-sm);">
