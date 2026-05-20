@@ -243,6 +243,34 @@
             color: #28a745;
         }
 
+        .notice-cancelled {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 10px;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            color: #721c24;
+            margin-bottom: 20px;
+        }
+
+        .notice-cancelled i {
+            font-size: 18px;
+            color: #dc3545;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: #fff;
+        }
+
+        .btn-danger:hover {
+            background: #b02a37;
+            color: #fff;
+        }
+
         @media (max-width: 600px) {
             .info-grid, .form-row { grid-template-columns: 1fr; }
             .form-full { grid-column: auto; }
@@ -276,6 +304,14 @@
                 </c:when>
             </c:choose>
         </div>
+
+        <%-- Cancelled notification --%>
+        <c:if test="${param.cancelled == '1'}">
+            <div class="notice-cancelled">
+                <i class="fas fa-times-circle"></i>
+                Đơn hàng #${donHang.id} đã được huỷ thành công.
+            </div>
+        </c:if>
 
         <%-- Success notification --%>
         <c:if test="${param.success == '1'}">
@@ -384,6 +420,29 @@
                                 Huỷ
                             </a>
                         </div>
+                    </form>
+                </div>
+
+                <%-- Cancel order section --%>
+                <div class="detail-card" style="border-color: #f5c6cb; background: #fff8f8;">
+                    <h3 style="color: #b02a37;"><i class="fas fa-ban"></i> Huỷ đơn hàng</h3>
+                    <p style="color: #666; margin-bottom: 18px; font-size: 15px;">
+                        Bạn có thể huỷ đơn hàng này vì đơn đang ở trạng thái
+                        <strong>
+                            <c:choose>
+                                <c:when test="${donHang.trangThai == 'PENDING'}">Đang chờ xử lý</c:when>
+                                <c:otherwise>Đang xử lý</c:otherwise>
+                            </c:choose>
+                        </strong>.
+                        Sau khi huỷ, đơn hàng sẽ không thể khôi phục lại.
+                    </p>
+                    <form method="post" action="${pageContext.request.contextPath}/history"
+                          onsubmit="return confirm('Bạn có chắc chắn muốn huỷ đơn hàng #${donHang.id} không? Hành động này không thể hoàn tác.')">
+                        <input type="hidden" name="action" value="cancelOrder"/>
+                        <input type="hidden" name="orderId" value="${donHang.id}"/>
+                        <button type="submit" class="btn btn-danger" id="btn-cancel-order">
+                            <i class="fas fa-times-circle"></i> Xác nhận huỷ đơn hàng
+                        </button>
                     </form>
                 </div>
             </c:when>

@@ -97,6 +97,25 @@ public class OrderHistoryServlet extends HttpServlet {
             } catch (NumberFormatException e) {
                 // fall through to redirect
             }
+
+        } else if ("cancelOrder".equals(action)) {
+            try {
+                int orderId = Integer.parseInt(request.getParameter("orderId"));
+
+                DonHangDAO dao = new DonHangDAO();
+                DonHang donHang = dao.getById(orderId);
+
+                // Security: only allow cancelling own orders
+                if (donHang != null && donHang.getKhachHangId() == user.getId()) {
+                    boolean cancelled = dao.cancelOrder(orderId);
+                    if (cancelled) {
+                        response.sendRedirect(request.getContextPath() + "/history?orderId=" + orderId + "&cancelled=1");
+                        return;
+                    }
+                }
+            } catch (NumberFormatException e) {
+                // fall through to redirect
+            }
         }
 
         response.sendRedirect(request.getContextPath() + "/history");

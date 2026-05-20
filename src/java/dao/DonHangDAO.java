@@ -179,6 +179,18 @@ public class DonHangDAO {
         }
     }
 
+    public boolean cancelOrder(int donHangId) {
+        String sql = "UPDATE DonHang SET trangThai = 'CANCELLED' WHERE id = ? AND trangThai IN ('PENDING','PROCESSING') AND is_deleted = 0";
+        try (Connection conn = DBConnect.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, donHangId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
     public List<DonHang> getAll() {
         List<DonHang> list = new ArrayList<>();
         String sql = getSQL_SELECT() + " WHERE is_deleted = 0 ORDER BY ngayDat DESC";
