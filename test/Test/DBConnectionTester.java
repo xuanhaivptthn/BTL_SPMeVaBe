@@ -1,6 +1,6 @@
 package Test;
 
-import Controller.DBConnect;
+import dao.DBConnect;
 import java.sql.Connection;
 import java.sql.SQLException;
 

@@ -1,0 +1,70 @@
+{
+  "welcomeMessage": "Xin chào! 🌸 Chào mừng bạn đến với **Cửa Hàng Mẹ & Bé**. Tôi là trợ lý ảo sẵn sàng hỗ trợ bạn tìm kiếm sản phẩm và giải đáp mọi thắc mắc. Bạn cần tôi trợ giúp điều gì hôm nay?",
+  "defaultResponse": "Cảm ơn bạn đã quan tâm! 💖 Câu hỏi này hơi khó với tôi. Bạn có thể tham khảo danh sách câu hỏi gợi ý bên dưới, hoặc liên hệ trực tiếp với đội ngũ nhân viên qua Hotline **1900 1234** (8:00 - 22:00) để được hỗ trợ tức thì nhé!",
+  "suggestions": [
+    {
+      "id": "sua_cho_be",
+      "text": "🍼 Tư vấn chọn sữa cho bé",
+      "keywords": ["sua", "sua bot", "sua so sinh", "dinh duong"],
+      "response": "Cửa hàng hiện có rất nhiều dòng sữa chất lượng nhập khẩu chính hãng cho bé:<br>• <b>Bé sơ sinh (0-6 tháng)</b>: Sữa Meiji Infant, Aptamil số 1, Similac Newborn.<br>• <b>Bé phát triển chiều cao & trí não</b>: Abbott Grow, PediaSure, Hikid Hàn Quốc.<br>👉 Bạn có thể xem toàn bộ sản phẩm sữa tại <a href='products?category=2' class='chat-link'>Danh mục Sữa cho bé</a>."
+    },
+    {
+      "id": "bim_ta",
+      "text": "🧻 Chọn tã bỉm loại nào tốt?",
+      "keywords": ["bim", "ta", "ta giay", "huggies", "bobby", "merries"],
+      "response": "Chào bạn, cửa hàng có đầy đủ các thương hiệu tã bỉm uy tín, dịu nhẹ cho da bé:<br>• <b>Merries (Nhật Bản)</b>: Siêu mềm mại, chống hăm tuyệt đối.<br>• <b>Huggies & Bobby</b>: Thiết kế ôm sát, thấm hút tốt, giá cả phải chăng.<br>👉 Xem và mua ngay tại <a href='products?category=4' class='chat-link'>Danh mục Tã bỉm vệ sinh</a>."
+    },
+    {
+      "id": "chinh_sach_doi_tra",
+      "text": "📦 Chính sách đổi trả hàng",
+      "keywords": ["doi tra", "hoan tien", "loi san pham", "doi hang"],
+      "response": "Cửa hàng hỗ trợ đổi trả hàng <b>hoàn toàn MIỄN PHÍ</b> trong vòng <b>7 ngày</b> kể từ ngày nhận hàng với điều kiện:<br>1. Sản phẩm còn nguyên tem mác, hộp và chưa qua sử dụng.<br>2. Sản phẩm bị lỗi từ nhà sản xuất hoặc giao sai mẫu.<br>📞 Vui lòng gọi trực tiếp Hotline <b>1900 1234</b> để được xử lý đổi hàng nhanh nhất!"
+    },
+    {
+      "id": "phi_van_chuyen",
+      "text": "🚚 Phí ship & Giao hàng",
+      "keywords": ["ship", "van chuyen", "giao hang", "phi ship", "bao lau"],
+      "response": "Chính sách giao hàng cực kỳ ưu đãi của cửa hàng:<br>• <b>Khu vực nội thành Hà Nội</b>: Giao hỏa tốc trong 2h hoặc giao thường trong ngày. Miễn phí ship cho đơn hàng từ <b>300.000đ</b>.<br>• <b>Các tỉnh thành khác</b>: Giao hàng từ 2-4 ngày làm việc. Phí ship đồng giá <b>30.000đ</b> (Miễn phí ship cho đơn từ <b>1.000.000đ</b>)."
+    },
+    {
+      "id": "khuyen_mai",
+      "text": "🎁 Khuyến mãi hiện có",
+      "keywords": ["khuyen mai", "giam gia", "voucher", "uu dai", "sale"],
+      "response": "Tuần lễ vàng cho Mẹ & Bé! 🌟 Cửa hàng đang áp dụng các chương trình ưu đãi lớn:<br>1. <b>Giảm ngay 10%</b> cho tất cả đơn hàng bỉm sữa đầu tiên của thành viên mới.<br>2. <b>Tặng quà xinh xắn</b> (bình nước/đồ chơi gỗ) cho hóa đơn từ 800.000đ.<br>👉 Xem toàn bộ các sản phẩm khuyến mãi tại <a href='products' class='chat-link'>Trang sản phẩm</a>."
+    }
+  ],
+  "qaPairs": [
+    {
+      "keywords": ["xin chao", "hello", "hi", "chao ban", "alo"],
+      "response": "Dạ xin chào bạn! 🌸 Tôi có thể giúp gì cho bạn hôm nay ạ?"
+    },
+    {
+      "keywords": ["tam biet", "bye", "cam on", "thank you", "ok"],
+      "response": "Dạ, rất vui được hỗ trợ bạn. Chúc bạn và bé yêu luôn khỏe mạnh, tràn đầy niềm vui! 💕 Nếu cần thêm thông tin gì, đừng ngần ngại nhắn tin lại cho tôi nhé!"
+    },
+    {
+      "keywords": ["xe day", "noi", "cui", "ghe an dam", "xe tap di"],
+      "response": "Cửa hàng có sẵn các dòng xe đẩy Combi (Nhật Bản), nôi cũi gỗ thông tự nhiên an toàn và ghế ăn dặm điều chỉnh độ cao tiện lợi.<br>👉 Mời mẹ tham khảo tại <a href='products?category=1' class='chat-link'>Danh mục Đồ dùng Mẹ & Bé</a>."
+    },
+    {
+      "keywords": ["bot an dam", "banh an dam", "an dam", "nguc coc"],
+      "response": "Giai đoạn ăn dặm rất quan trọng cho bé! Cửa hàng có các loại bột ăn dặm Hipp, Nestle, bánh ăn dặm Gerber nhiều hương vị thơm ngon dễ tiêu hóa.<br>👉 Xem các sản phẩm tại <a href='products?category=3' class='chat-link'>Danh mục Thực phẩm ăn dặm</a>."
+    },
+    {
+      "keywords": ["quan ao", "thoi trang", "vay", "ao", "quan", "so sinh"],
+      "response": "Thời trang của bé ưu tiên chất liệu Cotton 100% organic siêu mềm mát, thấm hút mồ hôi và không gây kích ứng da bé.<br>👉 Tham khảo ngay tại <a href='products?category=6' class='chat-link'>Danh mục Quần áo thời trang</a>."
+    },
+    {
+      "keywords": ["do choi", "puzzle", "lego", "xep hinh", "tri tue"],
+      "response": "Đồ chơi phát triển trí tuệ, xếp hình gỗ, ghép tranh an toàn cho trẻ em ở mọi lứa tuổi.<br>👉 Mua ngay tại <a href='products?category=11' class='chat-link'>Danh mục Đồ chơi trí tuệ</a>."
+    },
+    {
+      "keywords": ["lien he", "hotline", "dia chi", "cua hang ở dau", "so dien thoai", "email", "gio mo cua"],
+      "response": "Thông tin liên hệ chính thức của cửa hàng:<br>📍 <b>Địa chỉ</b>: 123 Đường Cầu Giấy, Quận Cầu Giấy, Hà Nội<br>📞 <b>Hotline</b>: 1900 1234 - 0987 654 321<br>✉️ <b>Email</b>: support@mevabe.vn<br>⏰ <b>Giờ mở cửa</b>: 8:00 - 22:00 tất cả các ngày trong tuần."
+    },
+    {
+      "keywords": ["dat hang", "mua hang", "thanh toan", "mua sua"],
+      "response": "Để mua sản phẩm, bạn vui lòng bấm chọn sản phẩm ưa thích, nhấn nút <b>\"Thêm vào giỏ\"</b> hoặc <b>\"Xem chi tiết\"</b>, sau đó vào <a href='cart' class='chat-link'>Giỏ hàng</a> và nhấn <b>\"Thanh toán\"</b> để hoàn tất đặt hàng nhé!"
+    }
+  ]
+}
