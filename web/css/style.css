@@ -134,14 +134,12 @@ a:hover {
     background-color: #fff;
     border: 1px solid var(--border-color);
     color: var(--text-color);
-    transition: all 0.3s ease;
 }
 
 .footer-socials a:hover {
     background-color: var(--primary-color);
     color: #fff;
     border-color: var(--primary-color);
-    transform: translateY(-3px);
 }
 
 .footer-links {
@@ -155,13 +153,11 @@ a:hover {
 
 .footer-links a {
     color: #555;
-    transition: all 0.3s ease;
     display: inline-block;
 }
 
 .footer-links a:hover {
     color: var(--primary-color);
-    transform: translateX(5px);
 }
 
 .footer-contact p {
@@ -181,7 +177,6 @@ a:hover {
 
 .footer-contact a {
     color: inherit;
-    transition: color 0.3s;
 }
 
 .footer-contact a:hover {

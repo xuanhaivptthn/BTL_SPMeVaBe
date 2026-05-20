@@ -208,6 +208,10 @@ public class DonHangDAO {
     }
     
     public List<DonHang> getFilteredOrders(String khachHangId, String donHangId) {
+        return getFilteredOrders(khachHangId, donHangId, null);
+    }
+    
+    public List<DonHang> getFilteredOrders(String khachHangId, String donHangId, String status) {
         List<DonHang> list = new ArrayList<>();
         StringBuilder sql = new StringBuilder(getSQL_SELECT() + " WHERE is_deleted = 0");
         List<Object> params = new ArrayList<>();
@@ -228,6 +232,11 @@ public class DonHangDAO {
             } catch (Exception e) {
                 params.add(-1);
             }
+        }
+
+        if (status != null && !status.trim().isEmpty()) {
+            sql.append(" AND trangThai = ?");
+            params.add(status.trim());
         }
         
         sql.append(" ORDER BY ngayDat DESC");

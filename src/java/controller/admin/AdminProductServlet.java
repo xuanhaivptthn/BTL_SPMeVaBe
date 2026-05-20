@@ -32,8 +32,27 @@ public class AdminProductServlet extends HttpServlet {
         String categoryId = request.getParameter("category");
         String brand = request.getParameter("brand");
         
+        // Pagination parameters
+        int pageSize = 10;
+        try {
+            String ps = request.getParameter("pageSize");
+            if (ps != null && !ps.isEmpty()) {
+                int parsed = Integer.parseInt(ps);
+                if (parsed == 20 || parsed == 50) pageSize = parsed;
+                else pageSize = 10;
+            }
+        } catch (NumberFormatException ignored) {}
+
+        int currentPage = 1;
+        try {
+            String p = request.getParameter("page");
+            if (p != null && !p.isEmpty()) {
+                currentPage = Math.max(1, Integer.parseInt(p));
+            }
+        } catch (NumberFormatException ignored) {}
+        
         SanPhamDAO dao = new SanPhamDAO();
-        List<SanPham> list;
+        List<SanPham> allProducts;
         
         if ((search != null && !search.trim().isEmpty()) || 
             (categoryId != null && !categoryId.trim().isEmpty()) || 
@@ -49,14 +68,29 @@ public class AdminProductServlet extends HttpServlet {
                 brands = new String[]{brand};
             }
             
-            list = dao.getFilteredProducts(search, categories, brands, null);
+            allProducts = dao.getFilteredProducts(search, categories, brands, null);
             request.setAttribute("search", search);
             request.setAttribute("selectedCategory", categoryId);
             request.setAttribute("selectedBrand", brand);
         } else {
-            list = dao.getAll();
+            allProducts = dao.getAll();
         }
-        request.setAttribute("products", list);
+
+        // Pagination calculation
+        int totalProducts = allProducts.size();
+        int totalPages = (int) Math.ceil((double) totalProducts / pageSize);
+        if (totalPages < 1) totalPages = 1;
+        if (currentPage > totalPages) currentPage = totalPages;
+
+        int fromIndex = (currentPage - 1) * pageSize;
+        int toIndex = Math.min(fromIndex + pageSize, totalProducts);
+        List<SanPham> pagedList = (fromIndex < totalProducts) ? allProducts.subList(fromIndex, toIndex) : new java.util.ArrayList<>();
+
+        request.setAttribute("products", pagedList);
+        request.setAttribute("totalProducts", totalProducts);
+        request.setAttribute("totalPages", totalPages);
+        request.setAttribute("currentPage", currentPage);
+        request.setAttribute("pageSize", pageSize);
         request.getRequestDispatcher("/admin/products.jsp").forward(request, response);
     }
 

@@ -21,22 +21,59 @@ public class AdminOrderServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
+        String action = request.getParameter("action");
+        if ("detail".equals(action)) {
+            handleDetail(request, response);
+            return;
+        }
+        
         String khachHangId = request.getParameter("khachHangId");
         String donHangId = request.getParameter("donHangId");
+        String status = request.getParameter("status");
         
         DonHangDAO dao = new DonHangDAO();
         List<DonHang> list;
         
-        if ((khachHangId != null && !khachHangId.trim().isEmpty()) || (donHangId != null && !donHangId.trim().isEmpty())) {
-            list = dao.getFilteredOrders(khachHangId, donHangId);
+        if ((khachHangId != null && !khachHangId.trim().isEmpty())
+                || (donHangId != null && !donHangId.trim().isEmpty())
+                || (status != null && !status.trim().isEmpty())) {
+            list = dao.getFilteredOrders(khachHangId, donHangId, status);
             request.setAttribute("searchKhachHangId", khachHangId);
             request.setAttribute("searchDonHangId", donHangId);
+            request.setAttribute("searchStatus", status);
         } else {
             list = dao.getAll();
         }
         
         request.setAttribute("orders", list);
         request.getRequestDispatcher("/admin/orders.jsp").forward(request, response);
+    }
+
+    private void handleDetail(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String idParam = request.getParameter("id");
+        if (idParam == null || idParam.trim().isEmpty()) {
+            response.sendRedirect(request.getContextPath() + "/admin/orders");
+            return;
+        }
+        
+        try {
+            int id = Integer.parseInt(idParam.trim());
+            DonHangDAO dao = new DonHangDAO();
+            DonHang dh = dao.getById(id);
+            if (dh == null) {
+                response.sendRedirect(request.getContextPath() + "/admin/orders");
+                return;
+            }
+            List<ChiTietDonHang> chiTiet = dao.getChiTietWithTenSP(id);
+            request.setAttribute("order", dh);
+            request.setAttribute("chiTiet", chiTiet);
+            
+            request.getRequestDispatcher("/admin/order_detail_admin.jsp").forward(request, response);
+        } catch (NumberFormatException e) {
+            response.sendRedirect(request.getContextPath() + "/admin/orders");
+        }
     }
 
     @Override

@@ -87,14 +87,12 @@ body > .container {
     background-color: #fff !important;
     border: 1px solid var(--border-color) !important;
     color: var(--text-color) !important;
-    transition: all 0.3s ease !important;
 }
 
 .footer-socials a:hover {
     background-color: var(--primary-color) !important;
     color: #fff !important;
     border-color: var(--primary-color) !important;
-    transform: translateY(-3px) !important;
 }
 
 .footer-links {
@@ -108,14 +106,12 @@ body > .container {
 
 .footer-links a {
     color: #555 !important;
-    transition: all 0.3s ease !important;
     display: inline-block !important;
     text-decoration: none !important;
 }
 
 .footer-links a:hover {
     color: var(--primary-color) !important;
-    transform: translateX(5px) !important;
 }
 
 .footer-contact p {
@@ -135,7 +131,6 @@ body > .container {
 
 .footer-contact a {
     color: inherit !important;
-    transition: color 0.3s !important;
     text-decoration: none !important;
 }
 
