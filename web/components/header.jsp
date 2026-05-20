@@ -10,6 +10,7 @@
             <a href="${pageContext.request.contextPath}/">Trang chủ</a>
             <a href="${pageContext.request.contextPath}/products">Sản phẩm</a>
             <a href="${pageContext.request.contextPath}/cart">Giỏ hàng</a>
+            <a href="${pageContext.request.contextPath}/contact">Liên hệ</a>
         
         <c:choose>
             <c:when test="${not empty sessionScope.user}">

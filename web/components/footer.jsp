@@ -184,6 +184,7 @@ body > .container {
                 <li><a href="${pageContext.request.contextPath}/products"><i class="fas fa-chevron-right" style="font-size: 11px; margin-right: 5px;"></i> Sản phẩm</a></li>
                 <li><a href="${pageContext.request.contextPath}/cart"><i class="fas fa-chevron-right" style="font-size: 11px; margin-right: 5px;"></i> Giỏ hàng</a></li>
                 <li><a href="${pageContext.request.contextPath}/history"><i class="fas fa-chevron-right" style="font-size: 11px; margin-right: 5px;"></i> Lịch sử mua hàng</a></li>
+                <li><a href="${pageContext.request.contextPath}/contact"><i class="fas fa-chevron-right" style="font-size: 11px; margin-right: 5px;"></i> Liên hệ</a></li>
             </ul>
         </div>
         
