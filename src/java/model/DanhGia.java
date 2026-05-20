@@ -9,6 +9,7 @@ public class DanhGia {
     private String hoTen;
     private int diemDanhGia;
     private String binhLuan;
+    private String anhDanhGia;
     private boolean anDanh;
     private Timestamp createdAt;
 
@@ -61,6 +62,14 @@ public class DanhGia {
 
     public void setBinhLuan(String binhLuan) {
         this.binhLuan = binhLuan;
+    }
+
+    public String getAnhDanhGia() {
+        return anhDanhGia;
+    }
+
+    public void setAnhDanhGia(String anhDanhGia) {
+        this.anhDanhGia = anhDanhGia;
     }
 
     public boolean isAnDanh() {

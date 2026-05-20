@@ -205,6 +205,14 @@
                                         </div>
                                         <div class="review-body">
                                             <p>${r.binhLuan}</p>
+                                            <c:if test="${not empty r.anhDanhGia}">
+                                                <div class="review-image-wrap">
+                                                    <img src="${pageContext.request.contextPath}/${r.anhDanhGia}"
+                                                         alt="Ảnh đánh giá"
+                                                         class="review-img-thumb"
+                                                         onclick="openReviewImg(this.src)"/>
+                                                </div>
+                                            </c:if>
                                         </div>
                                     </div>
                                 </c:forEach>
@@ -215,7 +223,22 @@
                     <!-- Review Form -->
                     <div class="review-form-container mt-20">
                         <h3>Gửi đánh giá của bạn</h3>
-                        <form action="${pageContext.request.contextPath}/submit-review" method="post" class="review-form">
+
+                        <%-- Server-side upload error messages --%>
+                        <c:if test="${param.uploadError == 'not_image'}">
+                            <div class="review-img-warning" style="margin-bottom:14px;">
+                                <i class="fa-solid fa-triangle-exclamation"></i>
+                                <span>File bạn tải lên không phải định dạng hình ảnh. Vui lòng chọn lại file hình ảnh (JPG, PNG, GIF, WEBP, BMP…).</span>
+                            </div>
+                        </c:if>
+                        <c:if test="${param.uploadError == 'too_large'}">
+                            <div class="review-img-warning" style="margin-bottom:14px;">
+                                <i class="fa-solid fa-triangle-exclamation"></i>
+                                <span>File ảnh vượt quá giới hạn 5 MB. Vui lòng chọn ảnh có kích thước nhỏ hơn.</span>
+                            </div>
+                        </c:if>
+
+                        <form action="${pageContext.request.contextPath}/submit-review" method="post" enctype="multipart/form-data" class="review-form">
                             <input type="hidden" name="productId" value="${product.maSanPham}"/>
                             
                             <div class="form-group rating-input-group">
@@ -242,6 +265,24 @@
                             </div>
 
                             <div class="form-group" style="margin-bottom: 15px;">
+                                <label>Ảnh đính kèm <span style="font-weight:400; color:#888;">(không bắt buộc – chỉ file hình ảnh, tối đa 5 MB)</span>:</label>
+                                <div class="review-upload-area" id="reviewUploadArea" onclick="document.getElementById('reviewImageInput').click()">
+                                    <i class="fa-solid fa-camera" style="font-size:28px; color:#aaa;"></i>
+                                    <p id="reviewUploadHint" style="margin:6px 0 0; color:#888; font-size:13px;">Nhấn hoặc kéo thả để chọn ảnh</p>
+                                    <img id="reviewImgPreview" src="#" alt="Preview" style="display:none; max-height:180px; max-width:100%; margin-top:10px; border-radius:8px; object-fit:cover;"/>
+                                </div>
+                                <!-- Warning message -->
+                                <div id="reviewImgWarning" class="review-img-warning" style="display:none;">
+                                    <i class="fa-solid fa-triangle-exclamation"></i>
+                                    <span id="reviewImgWarningText"></span>
+                                </div>
+                                <input type="file" id="reviewImageInput" name="reviewImage"
+                                       accept="*/*"
+                                       style="display:none;"
+                                       onchange="previewReviewImage(event)"/>
+                            </div>
+
+                            <div class="form-group" style="margin-bottom: 15px;">
                                 <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
                                     <input type="checkbox" name="isAnonymous"> Ẩn tên đầy đủ khi đánh giá
                                 </label>
@@ -257,18 +298,179 @@
 
     <jsp:include page="components/footer.jsp" />
 
+    <!-- Lightbox overlay for review images -->
+    <div id="reviewImgOverlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.75); z-index:9999; align-items:center; justify-content:center; cursor:zoom-out;" onclick="closeReviewImg()">
+        <img id="reviewImgFull" src="" alt="Ảnh đánh giá" style="max-width:90vw; max-height:90vh; border-radius:10px; box-shadow:0 8px 40px rgba(0,0,0,.6);"/>
+    </div>
+
+    <style>
+        .review-upload-area {
+            border: 2px dashed #d1d5db;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color .2s, background .2s;
+            background: #fafafa;
+        }
+        .review-upload-area:hover {
+            border-color: var(--primary, #e07b9a);
+            background: #fff5f8;
+        }
+        .review-upload-area.upload-error {
+            border-color: #ef4444;
+            background: #fff5f5;
+        }
+        .review-upload-area.upload-ok {
+            border-color: #22c55e;
+            background: #f0fff4;
+        }
+        .review-img-warning {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 8px;
+            padding: 10px 14px;
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            color: #856404;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        .review-img-warning i {
+            color: #d97706;
+            flex-shrink: 0;
+        }
+        .review-img-thumb {
+            max-width: 220px;
+            max-height: 160px;
+            border-radius: 8px;
+            object-fit: cover;
+            margin-top: 8px;
+            cursor: zoom-in;
+            border: 1px solid #e5e7eb;
+            transition: transform .2s;
+        }
+        .review-img-thumb:hover {
+            transform: scale(1.04);
+        }
+        .review-image-wrap {
+            margin-top: 8px;
+        }
+    </style>
+
     <script>
         function showTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-            
+
             document.getElementById('tab-' + tabId).classList.add('active');
             document.getElementById('btn-tab-' + tabId).classList.add('active');
         }
-        
+
         // Auto-select reviews tab if URL contains #reviews-section
         if (window.location.hash === '#reviews-section' || window.location.search.includes('rating=')) {
             showTab('reviews');
+        }
+
+        const MAX_SIZE_MB = 5;
+        const MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024;
+
+        function showUploadWarning(msg) {
+            const box  = document.getElementById('reviewImgWarning');
+            const txt  = document.getElementById('reviewImgWarningText');
+            const area = document.getElementById('reviewUploadArea');
+            txt.textContent = msg;
+            box.style.display  = 'flex';
+            area.classList.remove('upload-ok');
+            area.classList.add('upload-error');
+        }
+
+        function clearUploadWarning() {
+            const box  = document.getElementById('reviewImgWarning');
+            const area = document.getElementById('reviewUploadArea');
+            box.style.display = 'none';
+            area.classList.remove('upload-error');
+        }
+
+        function previewReviewImage(event) {
+            const input   = event.target;
+            const file    = input.files[0];
+            const preview = document.getElementById('reviewImgPreview');
+            const hint    = document.getElementById('reviewUploadHint');
+            const area    = document.getElementById('reviewUploadArea');
+
+            // Reset state
+            preview.style.display = 'none';
+            preview.src = '#';
+            clearUploadWarning();
+            area.classList.remove('upload-ok');
+
+            if (!file) {
+                hint.textContent = 'Nhấn hoặc kéo thả để chọn ảnh';
+                return;
+            }
+
+            // --- Validation ---
+            const isImage = file.type.startsWith('image/');
+            const tooBig  = file.size > MAX_SIZE_BYTES;
+            const sizeMB  = (file.size / (1024 * 1024)).toFixed(2);
+
+            if (!isImage && tooBig) {
+                showUploadWarning(
+                    'File "' + file.name + '" không phải hình ảnh và vượt quá ' + MAX_SIZE_MB + ' MB (' + sizeMB + ' MB). Vui lòng chọn lại.'
+                );
+                input.value = '';
+                hint.textContent = 'Nhấn hoặc kéo thả để chọn ảnh';
+                return;
+            }
+            if (!isImage) {
+                showUploadWarning(
+                    'File "' + file.name + '" không phải định dạng hình ảnh (MIME: ' + (file.type || 'không xác định') + '). Vui lòng chọn file hình ảnh.'
+                );
+                input.value = '';
+                hint.textContent = 'Nhấn hoặc kéo thả để chọn ảnh';
+                return;
+            }
+            if (tooBig) {
+                showUploadWarning(
+                    'File "' + file.name + '" quá lớn (' + sizeMB + ' MB). Giới hạn tối đa là ' + MAX_SIZE_MB + ' MB.'
+                );
+                input.value = '';
+                hint.textContent = 'Nhấn hoặc kéo thả để chọn ảnh';
+                return;
+            }
+
+            // --- Valid: show preview ---
+            area.classList.add('upload-ok');
+            hint.textContent = file.name + ' (' + sizeMB + ' MB)';
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Block form submit if invalid file still attached (safety net)
+        document.querySelector('.review-form').addEventListener('submit', function(e) {
+            const input = document.getElementById('reviewImageInput');
+            const warning = document.getElementById('reviewImgWarning');
+            if (input.files.length > 0 && warning.style.display !== 'none') {
+                e.preventDefault();
+                warning.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        });
+
+        function openReviewImg(src) {
+            const overlay = document.getElementById('reviewImgOverlay');
+            document.getElementById('reviewImgFull').src = src;
+            overlay.style.display = 'flex';
+        }
+
+        function closeReviewImg() {
+            document.getElementById('reviewImgOverlay').style.display = 'none';
         }
     </script>
 </body>

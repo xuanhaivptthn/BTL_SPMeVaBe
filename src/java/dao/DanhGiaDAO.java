@@ -33,6 +33,7 @@ public class DanhGiaDAO {
                     dg.setHoTen(rs.getString("hoTen"));
                     dg.setDiemDanhGia(rs.getInt("diemDanhGia"));
                     dg.setBinhLuan(rs.getString("binhLuan"));
+                    dg.setAnhDanhGia(rs.getString("anhDanhGia"));
                     dg.setAnDanh(rs.getBoolean("anDanh"));
                     dg.setCreatedAt(rs.getTimestamp("createdAt"));
                     list.add(dg);
@@ -45,7 +46,7 @@ public class DanhGiaDAO {
     }
 
     public boolean addReview(DanhGia dg) {
-        String sql = "INSERT INTO DanhGia (sanPhamId, khachHangId, hoTen, diemDanhGia, binhLuan, anDanh) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO DanhGia (sanPhamId, khachHangId, hoTen, diemDanhGia, binhLuan, anhDanhGia, anDanh) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DBConnect.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, dg.getSanPhamId());
@@ -57,7 +58,8 @@ public class DanhGiaDAO {
             ps.setString(3, dg.getHoTen());
             ps.setInt(4, dg.getDiemDanhGia());
             ps.setString(5, dg.getBinhLuan());
-            ps.setBoolean(6, dg.isAnDanh());
+            ps.setString(6, dg.getAnhDanhGia());
+            ps.setBoolean(7, dg.isAnDanh());
             return ps.executeUpdate() > 0;
         } catch (SQLException ex) {
             ex.printStackTrace();
