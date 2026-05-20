@@ -9,6 +9,24 @@
     <title>Quản lý Đơn hàng</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin.css">
+    <style>
+        .badge-updated {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffe082;
+            border-radius: 6px;
+            padding: 3px 9px;
+            font-size: 12px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+        .badge-updated i {
+            font-size: 11px;
+        }
+    </style>
 </head>
 <body>
     <div class="admin-container">
@@ -44,6 +62,7 @@
                             <th>Khách Hàng ID</th>
                             <th>Ngày đặt</th>
                             <th>Tổng tiền</th>
+                            <th>Người nhận & SĐT</th>
                             <th>Địa chỉ giao hàng</th>
                             <th>Trạng thái</th>
                             <th>Thao tác</th>
@@ -56,6 +75,17 @@
                                 <td>${o.khachHangId}</td>
                                 <td>${o.ngayDatFormatted}</td>
                                 <td><fmt:formatNumber value="${o.tongTien}" type="number" pattern="#,###"/></td>
+                                <td>
+                                    <div>${o.tenNguoiNhan}</div>
+                                    <div style="color:#888;font-size:13px;">${o.sdtNhanHang}</div>
+                                    <c:if test="${o.khachHangDaCapNhat}">
+                                        <div style="margin-top:6px;">
+                                            <span class="badge-updated">
+                                                <i class="fas fa-pen"></i> Khách đã cập nhật thông tin
+                                            </span>
+                                        </div>
+                                    </c:if>
+                                </td>
                                 <td>${o.diaChiGiaoHang}</td>
                                 <td>${o.trangThai}</td>
                                 <td>

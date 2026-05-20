@@ -63,9 +63,14 @@ CREATE TABLE IF NOT EXISTS DonHang (
     sdtNhanHang VARCHAR(50),
     diaChiGiaoHang VARCHAR(255),
     ghiChu TEXT,
+    khachHangDaCapNhat TINYINT(1) NOT NULL DEFAULT 0,
     is_deleted TINYINT(1) DEFAULT 0,
     FOREIGN KEY (khachHangId) REFERENCES KhachHang(id)
 );
+
+-- Migration: Nếu bảng DonHang đã tồn tại, chạy lệnh sau để thêm cột mới:
+-- ALTER TABLE DonHang ADD COLUMN IF NOT EXISTS khachHangDaCapNhat TINYINT(1) NOT NULL DEFAULT 0;
+
 
 -- Table DiaChiNhanHang
 CREATE TABLE IF NOT EXISTS DiaChiNhanHang (

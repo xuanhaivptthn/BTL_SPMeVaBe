@@ -175,52 +175,7 @@
                         </div>
                     </div>
 
-                    <!-- Filters -->
-                    <div class="review-filters mt-20">
-                        <span>Lọc theo:</span>
-                        <a href="?id=${product.maSanPham}#reviews-section" class="btn ${empty currentRatingFilter ? 'btn-primary' : 'btn-secondary'} btn-sm">Tất cả</a>
-                        <c:forEach begin="1" end="5" var="i">
-                            <c:set var="starVal" value="${6-i}"/>
-                            <a href="?id=${product.maSanPham}&rating=${starVal}#reviews-section" class="btn ${currentRatingFilter == starVal ? 'btn-primary' : 'btn-secondary'} btn-sm">${starVal} Sao</a>
-                        </c:forEach>
-                    </div>
-
-                    <!-- Review List -->
-                    <div class="review-list mt-20">
-                        <c:choose>
-                            <c:when test="${empty reviews}">
-                                <p>Chưa có đánh giá nào.</p>
-                            </c:when>
-                            <c:otherwise>
-                                <c:forEach var="r" items="${reviews}">
-                                    <div class="review-item">
-                                        <div class="review-header">
-                                            <strong>${r.hoTen}</strong>
-                                            <span class="review-date"><fmt:formatDate value="${r.createdAt}" pattern="dd/MM/yyyy HH:mm"/></span>
-                                        </div>
-                                        <div class="review-stars stars">
-                                            <c:forEach begin="1" end="5" var="i">
-                                                <i class="${i <= r.diemDanhGia ? 'fa-solid fa-star' : 'fa-regular fa-star'}"></i>
-                                            </c:forEach>
-                                        </div>
-                                        <div class="review-body">
-                                            <p>${r.binhLuan}</p>
-                                            <c:if test="${not empty r.anhDanhGia}">
-                                                <div class="review-image-wrap">
-                                                    <img src="${pageContext.request.contextPath}/${r.anhDanhGia}"
-                                                         alt="Ảnh đánh giá"
-                                                         class="review-img-thumb"
-                                                         onclick="openReviewImg(this.src)"/>
-                                                </div>
-                                            </c:if>
-                                        </div>
-                                    </div>
-                                </c:forEach>
-                            </c:otherwise>
-                        </c:choose>
-                    </div>
-
-                    <!-- Review Form -->
+                    <!-- Review Form (shown first) -->
                     <div class="review-form-container mt-20">
                         <h3>Gửi đánh giá của bạn</h3>
 
@@ -291,6 +246,57 @@
                             <button type="submit" class="btn">Gửi đánh giá</button>
                         </form>
                     </div>
+
+                    <!-- Filters & Toggle Reviews -->
+                    <div class="review-filters-header mt-20" id="review-list-anchor">
+                        <div class="review-filters">
+                            <span>Lọc theo:</span>
+                            <a href="?id=${product.maSanPham}#review-list-anchor" class="btn ${empty currentRatingFilter ? 'btn-primary' : 'btn-secondary'} btn-sm">Tất cả</a>
+                            <c:forEach begin="1" end="5" var="i">
+                                <c:set var="starVal" value="${6-i}"/>
+                                <a href="?id=${product.maSanPham}&rating=${starVal}#review-list-anchor" class="btn ${currentRatingFilter == starVal ? 'btn-primary' : 'btn-secondary'} btn-sm">${starVal} Sao</a>
+                            </c:forEach>
+                        </div>
+                        <button id="toggle-reviews-btn" class="btn btn-secondary btn-sm toggle-reviews-btn" onclick="toggleReviewList()">
+                            <i class="fa-solid fa-chevron-down" id="toggle-reviews-icon"></i>
+                            <span id="toggle-reviews-label">Xem đánh giá (${totalReviews})</span>
+                        </button>
+                    </div>
+
+                    <!-- Review List (hidden by default) -->
+                    <div class="review-list mt-20 review-list-collapsible" id="review-list-panel" style="display:none;">
+                        <c:choose>
+                            <c:when test="${empty reviews}">
+                                <p>Chưa có đánh giá nào.</p>
+                            </c:when>
+                            <c:otherwise>
+                                <c:forEach var="r" items="${reviews}">
+                                    <div class="review-item">
+                                        <div class="review-header">
+                                            <strong>${r.hoTen}</strong>
+                                            <span class="review-date"><fmt:formatDate value="${r.createdAt}" pattern="dd/MM/yyyy HH:mm"/></span>
+                                        </div>
+                                        <div class="review-stars stars">
+                                            <c:forEach begin="1" end="5" var="i">
+                                                <i class="${i <= r.diemDanhGia ? 'fa-solid fa-star' : 'fa-regular fa-star'}"></i>
+                                            </c:forEach>
+                                        </div>
+                                        <div class="review-body">
+                                            <p>${r.binhLuan}</p>
+                                            <c:if test="${not empty r.anhDanhGia}">
+                                                <div class="review-image-wrap">
+                                                    <img src="${pageContext.request.contextPath}/${r.anhDanhGia}"
+                                                         alt="Ảnh đánh giá"
+                                                         class="review-img-thumb"
+                                                         onclick="openReviewImg(this.src)"/>
+                                                </div>
+                                            </c:if>
+                                        </div>
+                                    </div>
+                                </c:forEach>
+                            </c:otherwise>
+                        </c:choose>
+                    </div>
                 </div>
             </div>
         </div>
@@ -358,6 +364,36 @@
         .review-image-wrap {
             margin-top: 8px;
         }
+        .review-filters-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            border-top: 1px solid #f0f0f0;
+            padding-top: 16px;
+        }
+        .review-filters-header .review-filters {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 0;
+        }
+        .toggle-reviews-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 600;
+            transition: background .2s, color .2s;
+            white-space: nowrap;
+        }
+        .toggle-reviews-btn #toggle-reviews-icon {
+            transition: transform .3s ease;
+        }
+        .toggle-reviews-btn.open #toggle-reviews-icon {
+            transform: rotate(180deg);
+        }
     </style>
 
     <script>
@@ -372,6 +408,32 @@
         // Auto-select reviews tab if URL contains #reviews-section
         if (window.location.hash === '#reviews-section' || window.location.search.includes('rating=')) {
             showTab('reviews');
+            // If a rating filter is active, auto-expand the review list
+            if (window.location.search.includes('rating=')) {
+                var panel = document.getElementById('review-list-panel');
+                var btn   = document.getElementById('toggle-reviews-btn');
+                var lbl   = document.getElementById('toggle-reviews-label');
+                var icon  = document.getElementById('toggle-reviews-icon');
+                if (panel) panel.style.display = 'block';
+                if (btn)   btn.classList.add('open');
+                if (lbl)   lbl.textContent = lbl.textContent.replace('Xem', 'Ẩn');
+            }
+        }
+
+        function toggleReviewList() {
+            var panel = document.getElementById('review-list-panel');
+            var btn   = document.getElementById('toggle-reviews-btn');
+            var lbl   = document.getElementById('toggle-reviews-label');
+            var isOpen = panel.style.display !== 'none';
+            if (isOpen) {
+                panel.style.display = 'none';
+                btn.classList.remove('open');
+                lbl.textContent = lbl.textContent.replace('Ẩn đánh giá', 'Xem đánh giá');
+            } else {
+                panel.style.display = 'block';
+                btn.classList.add('open');
+                lbl.textContent = lbl.textContent.replace('Xem đánh giá', 'Ẩn đánh giá');
+            }
         }
 
         const MAX_SIZE_MB = 5;

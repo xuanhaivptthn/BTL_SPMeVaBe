@@ -12,6 +12,7 @@ public class DonHang {
     private String sdtNhanHang;
     private String diaChiGiaoHang;
     private String ghiChu;
+    private boolean khachHangDaCapNhat;
 
     public DonHang() {
     }
@@ -92,5 +93,13 @@ public class DonHang {
 
     public void setGhiChu(String ghiChu) {
         this.ghiChu = ghiChu;
+    }
+
+    public boolean isKhachHangDaCapNhat() {
+        return khachHangDaCapNhat;
+    }
+
+    public void setKhachHangDaCapNhat(boolean khachHangDaCapNhat) {
+        this.khachHangDaCapNhat = khachHangDaCapNhat;
     }
 }

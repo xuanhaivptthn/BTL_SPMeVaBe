@@ -6,6 +6,7 @@ public class ChiTietDonHang {
     private int sanPhamId;
     private int soLuong;
     private double donGia;
+    private String tenSanPham;
 
     public ChiTietDonHang() {
     }
@@ -48,5 +49,13 @@ public class ChiTietDonHang {
 
     public void setDonGia(double donGia) {
         this.donGia = donGia;
+    }
+
+    public String getTenSanPham() {
+        return tenSanPham;
+    }
+
+    public void setTenSanPham(String tenSanPham) {
+        this.tenSanPham = tenSanPham;
     }
 }
