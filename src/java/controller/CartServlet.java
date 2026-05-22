@@ -22,6 +22,12 @@ public class CartServlet extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         
+        Integer draftOrderId = (Integer) session.getAttribute("draftOrderId");
+        if (draftOrderId != null) {
+            new dao.DonHangDAO().deleteDraftOrder(draftOrderId);
+            session.removeAttribute("draftOrderId");
+        }
+        
         model.NguoiDung user = (model.NguoiDung) session.getAttribute("user");
         if (user == null || "ADMIN".equals(user.getRole()) || "STAFF".equals(user.getRole())) {
             session.setAttribute("redirectAfterLogin", "/cart");

@@ -10,7 +10,7 @@ import java.util.List;
 public class DonHangDAO {
 
     public boolean insert(DonHang dh, List<ChiTietDonHang> chiTietList) {
-        String sqlDonHang = "INSERT INTO DonHang (khachHangId, tongTien, trangThai, tenNguoiNhan, sdtNhanHang, diaChiGiaoHang, ghiChu) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sqlDonHang = "INSERT INTO DonHang (khachHangId, tongTien, trangThai, tenNguoiNhan, sdtNhanHang, diaChiGiaoHang, ghiChu, maGiamGia, soTienGiam, phuongThucThanhToan) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         String sqlChiTiet = "INSERT INTO ChiTietDonHang (donHangId, sanPhamId, soLuong, donGia) VALUES (?, ?, ?, ?)";
         
         Connection conn = null;
@@ -27,6 +27,9 @@ public class DonHangDAO {
                 psDH.setString(5, dh.getSdtNhanHang());
                 psDH.setString(6, dh.getDiaChiGiaoHang());
                 psDH.setString(7, dh.getGhiChu());
+                psDH.setString(8, dh.getMaGiamGia());
+                psDH.setDouble(9, dh.getSoTienGiam());
+                psDH.setString(10, dh.getPhuongThucThanhToan());
                 psDH.executeUpdate();
                 
                 try (ResultSet keys = psDH.getGeneratedKeys()) {
@@ -104,7 +107,7 @@ public class DonHangDAO {
     }
 
     public String getSQL_SELECT() {
-        return "SELECT id, khachHangId, ngayDat, tongTien, trangThai, tenNguoiNhan, sdtNhanHang, diaChiGiaoHang, ghiChu, khachHangDaCapNhat FROM DonHang";
+        return "SELECT id, khachHangId, ngayDat, tongTien, trangThai, tenNguoiNhan, sdtNhanHang, diaChiGiaoHang, ghiChu, khachHangDaCapNhat, maGiamGia, soTienGiam, phuongThucThanhToan FROM DonHang";
     }
 
     private DonHang mapRow(ResultSet rs) throws SQLException {
@@ -120,6 +123,9 @@ public class DonHangDAO {
         dh.setDiaChiGiaoHang(rs.getString("diaChiGiaoHang"));
         dh.setGhiChu(rs.getString("ghiChu"));
         dh.setKhachHangDaCapNhat(rs.getBoolean("khachHangDaCapNhat"));
+        dh.setMaGiamGia(rs.getString("maGiamGia"));
+        dh.setSoTienGiam(rs.getDouble("soTienGiam"));
+        dh.setPhuongThucThanhToan(rs.getString("phuongThucThanhToan"));
         return dh;
     }
 
@@ -287,5 +293,112 @@ public class DonHangDAO {
             ex.printStackTrace();
         }
         return list;
+    }
+
+    public int getNextOrderId() {
+        String sql = "SELECT COALESCE(MAX(id), 0) + 1 AS next_id FROM DonHang";
+        try (Connection conn = DBConnect.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt("next_id");
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return 1;
+    }
+
+    public boolean deleteDraftOrder(int donHangId) {
+        Connection conn = null;
+        try {
+            conn = DBConnect.getConnection();
+            conn.setAutoCommit(false);
+            
+            // Lấy danh sách chi tiết đơn hàng để hoàn lại kho
+            List<ChiTietDonHang> list = getChiTietWithTenSP(donHangId);
+            String sqlRestoreStock = "UPDATE SanPham SET SoLuong = SoLuong + ? WHERE MaSanPham = ?";
+            try (PreparedStatement psRestore = conn.prepareStatement(sqlRestoreStock)) {
+                for (ChiTietDonHang ct : list) {
+                    psRestore.setInt(1, ct.getSoLuong());
+                    psRestore.setInt(2, ct.getSanPhamId());
+                    psRestore.executeUpdate();
+                }
+            }
+            
+            // Xóa chi tiết đơn hàng
+            String sqlDeleteDetails = "DELETE FROM ChiTietDonHang WHERE donHangId = ?";
+            try (PreparedStatement psDelDetails = conn.prepareStatement(sqlDeleteDetails)) {
+                psDelDetails.setInt(1, donHangId);
+                psDelDetails.executeUpdate();
+            }
+            
+            // Xóa đơn hàng
+            String sqlDeleteOrder = "DELETE FROM DonHang WHERE id = ? AND trangThai = 'UNPAID'";
+            try (PreparedStatement psDelOrder = conn.prepareStatement(sqlDeleteOrder)) {
+                psDelOrder.setInt(1, donHangId);
+                int affected = psDelOrder.executeUpdate();
+                if (affected == 0) {
+                    // Trạng thái không phải UNPAID hoặc không tìm thấy, không xóa để tránh mất mát đơn hàng thật
+                    conn.rollback();
+                    return false;
+                }
+            }
+            
+            conn.commit();
+            return true;
+        } catch (SQLException ex) {
+            if (conn != null) {
+                try { conn.rollback(); } catch (SQLException e) { e.printStackTrace(); }
+            }
+            ex.printStackTrace();
+            return false;
+        } finally {
+            if (conn != null) {
+                try { conn.setAutoCommit(true); conn.close(); } catch (SQLException e) { e.printStackTrace(); }
+            }
+        }
+    }
+
+    public boolean updateDraftOrder(int id, double tongTien, String maGiamGia, double soTienGiam,
+                                    String tenNguoiNhan, String sdtNhanHang, String diaChiGiaoHang,
+                                    String ghiChu, String phuongThucThanhToan) {
+        String sql = "UPDATE DonHang SET tongTien = ?, maGiamGia = ?, soTienGiam = ?, tenNguoiNhan = ?, sdtNhanHang = ?, diaChiGiaoHang = ?, ghiChu = ?, phuongThucThanhToan = ? WHERE id = ? AND trangThai = 'UNPAID'";
+        try (Connection conn = DBConnect.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setDouble(1, tongTien);
+            ps.setString(2, maGiamGia);
+            ps.setDouble(3, soTienGiam);
+            ps.setString(4, tenNguoiNhan);
+            ps.setString(5, sdtNhanHang);
+            ps.setString(6, diaChiGiaoHang);
+            ps.setString(7, ghiChu);
+            ps.setString(8, phuongThucThanhToan);
+            ps.setInt(9, id);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean finalizeDraftOrder(DonHang dh) {
+        String sql = "UPDATE DonHang SET tenNguoiNhan = ?, sdtNhanHang = ?, diaChiGiaoHang = ?, ghiChu = ?, phuongThucThanhToan = ?, tongTien = ?, maGiamGia = ?, soTienGiam = ?, trangThai = 'PENDING' WHERE id = ? AND trangThai = 'UNPAID'";
+        try (Connection conn = DBConnect.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, dh.getTenNguoiNhan());
+            ps.setString(2, dh.getSdtNhanHang());
+            ps.setString(3, dh.getDiaChiGiaoHang());
+            ps.setString(4, dh.getGhiChu());
+            ps.setString(5, dh.getPhuongThucThanhToan());
+            ps.setDouble(6, dh.getTongTien());
+            ps.setString(7, dh.getMaGiamGia());
+            ps.setDouble(8, dh.getSoTienGiam());
+            ps.setInt(9, dh.getId());
+            return ps.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return false;
+        }
     }
 }

@@ -65,6 +65,9 @@ CREATE TABLE IF NOT EXISTS DonHang (
     ghiChu TEXT,
     khachHangDaCapNhat TINYINT(1) NOT NULL DEFAULT 0,
     is_deleted TINYINT(1) DEFAULT 0,
+    maGiamGia VARCHAR(50) DEFAULT NULL,
+    soTienGiam DOUBLE DEFAULT 0,
+    phuongThucThanhToan VARCHAR(50) DEFAULT 'COD',
     FOREIGN KEY (khachHangId) REFERENCES KhachHang(id)
 );
 
@@ -241,3 +244,24 @@ CREATE TABLE IF NOT EXISTS BackInStockSubscription (
   createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (productId) REFERENCES SanPham(MaSanPham) ON DELETE CASCADE
 );
+
+-- Table MaGiamGia
+CREATE TABLE IF NOT EXISTS MaGiamGia (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    ma VARCHAR(50) UNIQUE NOT NULL,
+    moTa VARCHAR(255),
+    loaiGiamGia VARCHAR(20) NOT NULL, -- 'PERCENT' hoặc 'AMOUNT'
+    giaTriGiam DOUBLE NOT NULL,
+    giaTriDonHangToiThieu DOUBLE DEFAULT 0,
+    giamToiDa DOUBLE DEFAULT 0,
+    ngayHetHan DATETIME NULL,
+    trangThai VARCHAR(20) DEFAULT 'ACTIVE',
+    is_deleted TINYINT(1) DEFAULT 0
+);
+
+-- Seed data for MaGiamGia
+INSERT INTO MaGiamGia (ma, moTa, loaiGiamGia, giaTriGiam, giaTriDonHangToiThieu, giamToiDa) VALUES
+('MEVABE10', 'Giảm 10% cho đơn hàng bất kỳ, tối đa 100.000đ', 'PERCENT', 10, 0, 100000),
+('KHACHHANGMOI', 'Giảm 50.000đ cho đơn hàng từ 300.000đ', 'AMOUNT', 50000, 300000, 50000),
+('SIEUUUUTIEU', 'Giảm 20% cho đơn hàng từ 500.000đ, tối đa 200.000đ', 'PERCENT', 20, 500000, 200000);
+

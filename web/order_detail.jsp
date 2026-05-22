@@ -345,6 +345,34 @@
                     <label>Địa chỉ giao hàng</label>
                     <p>${donHang.diaChiGiaoHang}</p>
                 </div>
+                <div class="info-item">
+                    <label>Phương thức thanh toán</label>
+                    <p>
+                        <c:choose>
+                            <c:when test="${donHang.phuongThucThanhToan == 'QR_ONLINE'}">
+                                <i class="fas fa-qrcode" style="color: #4a90e2; margin-right: 4px;"></i> Quét mã QR Online
+                            </c:when>
+                            <c:otherwise>
+                                <i class="fas fa-truck" style="color: var(--primary-color); margin-right: 4px;"></i> COD (Thanh toán khi nhận hàng)
+                            </c:otherwise>
+                        </c:choose>
+                    </p>
+                </div>
+                <div class="info-item">
+                    <label>Mã giảm giá</label>
+                    <p>
+                        <c:choose>
+                            <c:when test="${not empty donHang.maGiamGia}">
+                                <span style="background: #ecfdf5; color: #065f46; padding: 3px 8px; border-radius: 6px; font-weight: 700; font-size: 13px; border: 1px solid #a7f3d0; display: inline-flex; align-items: center; gap: 4px;">
+                                    <i class="fas fa-tag"></i> ${donHang.maGiamGia}
+                                </span>
+                            </c:when>
+                            <c:otherwise>
+                                <span style="color: #999; font-style: italic;">Không sử dụng</span>
+                            </c:otherwise>
+                        </c:choose>
+                    </p>
+                </div>
                 <c:if test="${not empty donHang.ghiChu}">
                 <div class="info-item" style="grid-column: 1 / -1;">
                     <label>Ghi chú</label>
@@ -381,9 +409,25 @@
                     </c:forEach>
                 </tbody>
             </table>
-            <div class="items-total">
-                <span style="color:#777; font-weight:600;">Tổng cộng:</span>
-                <strong><fmt:formatNumber value="${donHang.tongTien}" type="number" pattern="#,###"/> VND</strong>
+            <div class="items-total" style="flex-direction: column; align-items: flex-end; gap: 8px; border-top: 1px solid #eee; padding-top: 16px; margin-top: 16px;">
+                <div style="font-size: 14px; color: #666; display: flex; justify-content: space-between; width: 280px;">
+                    <span>Tạm tính hàng hoá:</span>
+                    <span style="font-weight: 700;"><fmt:formatNumber value="${donHang.tongTien + donHang.soTienGiam}" type="number" pattern="#,###"/> VND</span>
+                </div>
+                <c:if test="${not empty donHang.maGiamGia && donHang.soTienGiam > 0}">
+                    <div style="font-size: 14px; color: #28a745; display: flex; justify-content: space-between; width: 280px;">
+                        <span>Mã giảm giá (${donHang.maGiamGia}):</span>
+                        <span style="font-weight: 700;">-<fmt:formatNumber value="${donHang.soTienGiam}" type="number" pattern="#,###"/> VND</span>
+                    </div>
+                </c:if>
+                <div style="font-size: 14px; color: #666; display: flex; justify-content: space-between; width: 280px; padding-bottom: 8px; border-bottom: 1px dashed #eee;">
+                    <span>Phí vận chuyển:</span>
+                    <span style="font-weight: 700; color: #28a745;">Miễn phí</span>
+                </div>
+                <div style="font-size: 16px; color: #2c3e50; display: flex; justify-content: space-between; align-items: center; width: 280px; margin-top: 4px;">
+                    <span style="font-weight: 700;">Tổng thanh toán:</span>
+                    <strong style="font-size: 20px; color: var(--primary-color);"><fmt:formatNumber value="${donHang.tongTien}" type="number" pattern="#,###"/> VND</strong>
+                </div>
             </div>
         </div>
 

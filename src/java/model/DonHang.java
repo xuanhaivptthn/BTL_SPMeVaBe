@@ -13,6 +13,9 @@ public class DonHang {
     private String diaChiGiaoHang;
     private String ghiChu;
     private boolean khachHangDaCapNhat;
+    private String maGiamGia;
+    private double soTienGiam;
+    private String phuongThucThanhToan;
 
     public DonHang() {
     }
@@ -101,5 +104,29 @@ public class DonHang {
 
     public void setKhachHangDaCapNhat(boolean khachHangDaCapNhat) {
         this.khachHangDaCapNhat = khachHangDaCapNhat;
+    }
+
+    public String getMaGiamGia() {
+        return maGiamGia;
+    }
+
+    public void setMaGiamGia(String maGiamGia) {
+        this.maGiamGia = maGiamGia;
+    }
+
+    public double getSoTienGiam() {
+        return soTienGiam;
+    }
+
+    public void setSoTienGiam(double soTienGiam) {
+        this.soTienGiam = soTienGiam;
+    }
+
+    public String getPhuongThucThanhToan() {
+        return phuongThucThanhToan;
+    }
+
+    public void setPhuongThucThanhToan(String phuongThucThanhToan) {
+        this.phuongThucThanhToan = phuongThucThanhToan;
     }
 }

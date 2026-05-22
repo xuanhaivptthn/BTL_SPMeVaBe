@@ -174,8 +174,45 @@
                         <span>${order.khachHangId}</span>
                     </div>
                     <div class="detail-info-item">
-                        <label>Tổng tiền</label>
+                        <label>Tổng thanh toán</label>
                         <span style="color:var(--primary-color);font-weight:700;"><fmt:formatNumber value="${order.tongTien}" pattern="#,###"/> VND</span>
+                    </div>
+                    <div class="detail-info-item">
+                        <label>Phương thức thanh toán</label>
+                        <span>
+                            <c:choose>
+                                <c:when test="${order.phuongThucThanhToan == 'QR_ONLINE'}">
+                                    <span style="display:inline-flex; align-items:center; gap:5px; font-weight:600; color:#0369a1; background:#e0f2fe; padding:2px 8px; border-radius:12px; font-size:13px;">
+                                        <i class="fas fa-qrcode"></i> Chuyển khoản QR Online
+                                    </span>
+                                </c:when>
+                                <c:when test="${order.phuongThucThanhToan == 'COD'}">
+                                    <span style="display:inline-flex; align-items:center; gap:5px; font-weight:600; color:#374151; background:#f3f4f6; padding:2px 8px; border-radius:12px; font-size:13px;">
+                                        <i class="fas fa-money-bill-wave"></i> COD trực tiếp
+                                    </span>
+                                </c:when>
+                                <c:otherwise>
+                                    <span style="color:#666; font-size:13px;">
+                                        <i class="fas fa-wallet"></i> ${empty order.phuongThucThanhToan ? 'Mặc định' : order.phuongThucThanhToan}
+                                    </span>
+                                </c:otherwise>
+                            </c:choose>
+                        </span>
+                    </div>
+                    <div class="detail-info-item">
+                        <label>Mã giảm giá đã dùng</label>
+                        <span>
+                            <c:choose>
+                                <c:when test="${not empty order.maGiamGia}">
+                                    <span style="display:inline-flex; align-items:center; gap:5px; color:#16a34a; font-weight:700;">
+                                        <i class="fas fa-tag"></i> ${order.maGiamGia}
+                                    </span>
+                                </c:when>
+                                <c:otherwise>
+                                    <span style="color:#aaa;">Không áp dụng</span>
+                                </c:otherwise>
+                            </c:choose>
+                        </span>
                     </div>
                 </div>
             </div>
@@ -240,9 +277,25 @@
                         </c:choose>
                     </tbody>
                 </table>
-                <div class="detail-total-row">
-                    <span>Tổng cộng:</span>
-                    <span><fmt:formatNumber value="${order.tongTien}" pattern="#,###"/> VND</span>
+                <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px; border-top: 2px solid #eee; padding-top: 15px; margin-top: 15px;">
+                    <div style="font-size: 14px; color: #666; display: flex; justify-content: space-between; width: 280px;">
+                        <span>Tạm tính hàng hoá:</span>
+                        <span style="font-weight: 700; color: #222;"><fmt:formatNumber value="${order.tongTien + order.soTienGiam}" type="number" pattern="#,###"/> VND</span>
+                    </div>
+                    <c:if test="${not empty order.maGiamGia && order.soTienGiam > 0}">
+                        <div style="font-size: 14px; color: #16a34a; display: flex; justify-content: space-between; width: 280px;">
+                            <span>Khuyến mãi (${order.maGiamGia}):</span>
+                            <span style="font-weight: 700; color: #16a34a;">- <fmt:formatNumber value="${order.soTienGiam}" type="number" pattern="#,###"/> VND</span>
+                        </div>
+                    </c:if>
+                    <div style="font-size: 14px; color: #666; display: flex; justify-content: space-between; width: 280px; padding-bottom: 8px; border-bottom: 1px dashed #eee;">
+                        <span>Phí giao hàng:</span>
+                        <span style="font-weight: 700; color: #16a34a;">Miễn phí</span>
+                    </div>
+                    <div style="font-size: 16px; color: #222; display: flex; justify-content: space-between; align-items: center; width: 280px; margin-top: 4px;">
+                        <span style="font-weight: 700;">Tổng thanh toán:</span>
+                        <strong style="font-size: 20px; color: var(--primary-color, #e91e63);"><fmt:formatNumber value="${order.tongTien}" type="number" pattern="#,###"/> VND</strong>
+                    </div>
                 </div>
             </div>
             

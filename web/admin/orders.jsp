@@ -222,7 +222,33 @@
                                 <td><strong>#${o.id}</strong></td>
                                 <td>${o.khachHangId}</td>
                                 <td>${o.ngayDatFormatted}</td>
-                                <td><strong style="color:var(--primary-color);"><fmt:formatNumber value="${o.tongTien}" type="number" pattern="#,###"/> VND</strong></td>
+                                <td>
+                                    <strong style="color:var(--primary-color);"><fmt:formatNumber value="${o.tongTien}" type="number" pattern="#,###"/> VND</strong>
+                                    <c:if test="${not empty o.maGiamGia && o.soTienGiam > 0}">
+                                        <div style="font-size: 12px; color: #16a34a; margin-top: 4px; display: flex; align-items: center; gap: 4px;">
+                                            <i class="fas fa-tag"></i> <span>${o.maGiamGia} (-<fmt:formatNumber value="${o.soTienGiam}" pattern="#,###"/>)</span>
+                                        </div>
+                                    </c:if>
+                                    <div style="margin-top: 6px;">
+                                        <c:choose>
+                                            <c:when test="${o.phuongThucThanhToan == 'QR_ONLINE'}">
+                                                <span class="payment-badge qr-badge" style="display:inline-flex; align-items:center; gap:4px; font-size:11px; background:#e0f2fe; color:#0369a1; padding:2px 8px; border-radius:12px; font-weight:600; white-space:nowrap;">
+                                                    <i class="fas fa-qrcode"></i> QR Online
+                                                </span>
+                                            </c:when>
+                                            <c:when test="${o.phuongThucThanhToan == 'COD'}">
+                                                <span class="payment-badge cod-badge" style="display:inline-flex; align-items:center; gap:4px; font-size:11px; background:#f3f4f6; color:#374151; padding:2px 8px; border-radius:12px; font-weight:600; white-space:nowrap;">
+                                                    <i class="fas fa-money-bill-wave"></i> COD trực tiếp
+                                                </span>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <span class="payment-badge standard-badge" style="display:inline-flex; align-items:center; gap:4px; font-size:11px; background:#f3f4f6; color:#374151; padding:2px 8px; border-radius:12px; font-weight:600; white-space:nowrap;">
+                                                    <i class="fas fa-wallet"></i> ${empty o.phuongThucThanhToan ? 'Mặc định' : o.phuongThucThanhToan}
+                                                </span>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </div>
+                                </td>
                                 <td>
                                     <div>${o.tenNguoiNhan}</div>
                                     <div style="color:#888;font-size:13px;">${o.sdtNhanHang}</div>
