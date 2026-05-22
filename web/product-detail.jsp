@@ -91,7 +91,7 @@
         <!-- Suggested Products -->
         <div class="suggested-products mt-20">
             <h3>Sản phẩm gợi ý</h3>
-            <div class="product-grid" style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));">
+            <div class="product-grid">
                 <c:forEach var="p" items="${suggestedProducts}">
                     <div class="product-card">
                         <a href="${pageContext.request.contextPath}/product-detail?id=${p.maSanPham}">

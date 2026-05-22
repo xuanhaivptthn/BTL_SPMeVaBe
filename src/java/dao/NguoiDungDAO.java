@@ -177,4 +177,47 @@ public class NguoiDungDAO {
             return false;
         }
     }
+
+    public boolean updateProfile(int id, String hoTen, String email, String dienThoai) {
+        String sql = "UPDATE NguoiDung SET hoTen = ?, email = ?, dienThoai = ? WHERE id = ? AND is_deleted = 0";
+        try (Connection conn = DBConnect.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, hoTen);
+            ps.setString(2, email);
+            ps.setString(3, dienThoai);
+            ps.setInt(4, id);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean checkPassword(int id, String rawPassword) {
+        String sql = "SELECT id FROM NguoiDung WHERE id = ? AND matKhau = ? AND is_deleted = 0";
+        try (Connection conn = DBConnect.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            ps.setString(2, rawPassword);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean updatePassword(int id, String newPassword) {
+        String sql = "UPDATE NguoiDung SET matKhau = ? WHERE id = ? AND is_deleted = 0";
+        try (Connection conn = DBConnect.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, newPassword);
+            ps.setInt(2, id);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
 }

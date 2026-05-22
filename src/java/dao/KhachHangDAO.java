@@ -64,4 +64,20 @@ public class KhachHangDAO {
             }
         }
     }
+
+    public int getDiemTichLuy(int khachHangId) {
+        String sql = "SELECT diemTichLuy FROM KhachHang WHERE id = ?";
+        try (Connection conn = DBConnect.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, khachHangId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("diemTichLuy");
+                }
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return 0;
+    }
 }

@@ -15,6 +15,7 @@
         <c:choose>
             <c:when test="${not empty sessionScope.user}">
                 <b>Xin chào, ${sessionScope.user.hoTen}</b> |
+                <a href="${pageContext.request.contextPath}/profile">Tài khoản</a> |
                 <c:choose>
                     <c:when test="${sessionScope.user.role == 'ADMIN' or sessionScope.user.role == 'STAFF'}">
                         <a href="${pageContext.request.contextPath}/admin/index.jsp" style="color:red">Trang Quản Trị</a> |
