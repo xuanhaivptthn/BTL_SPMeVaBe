@@ -20,6 +20,9 @@
         <c:if test="${param.msg == 'success'}">
             <p class="alert-success text-center">Đăng ký thành công! Vui lòng đăng nhập.</p>
         </c:if>
+        <c:if test="${param.msg == 'reset_success'}">
+            <p class="alert-success text-center">Đổi mật khẩu thành công! Vui lòng đăng nhập bằng mật khẩu mới.</p>
+        </c:if>
         
         <form action="${pageContext.request.contextPath}/login" method="post">
             <div class="form-group">
@@ -33,7 +36,8 @@
             <button type="submit" class="btn" style="width:100%">Đăng nhập</button>
         </form>
         
-        <p class="text-center mt-20">Chưa có tài khoản? <a href="${pageContext.request.contextPath}/register">Đăng ký ngay</a></p>
+        <p class="text-center mt-20"><a href="${pageContext.request.contextPath}/forgot-password">Quên mật khẩu?</a></p>
+        <p class="text-center mt-20" style="margin-top: 10px;">Chưa có tài khoản? <a href="${pageContext.request.contextPath}/register">Đăng ký ngay</a></p>
     </div>
 
     <jsp:include page="components/footer.jsp" />

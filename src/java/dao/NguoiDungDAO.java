@@ -117,6 +117,30 @@ public class NguoiDungDAO {
         return null;
     }
 
+    public NguoiDung getByEmail(String email) {
+        String sql = "SELECT id, hoTen, email, dienThoai, tenDangNhap, role, status FROM NguoiDung WHERE email = ? AND is_deleted = 0";
+        try (Connection conn = DBConnect.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, email);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    NguoiDung nd = new NguoiDung();
+                    nd.setId(rs.getInt("id"));
+                    nd.setHoTen(rs.getString("hoTen"));
+                    nd.setEmail(rs.getString("email"));
+                    nd.setDienThoai(rs.getString("dienThoai"));
+                    nd.setTenDangNhap(rs.getString("tenDangNhap"));
+                    nd.setRole(rs.getString("role"));
+                    nd.setStatus(rs.getString("status"));
+                    return nd;
+                }
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
     public boolean insert(NguoiDung nd) {
         String sql = "INSERT INTO NguoiDung (hoTen, email, dienThoai, tenDangNhap, matKhau, role, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DBConnect.getConnection();
