@@ -198,7 +198,6 @@ body > .container {
 </footer>
 
 <!-- Tích hợp Chatbox tư vấn hỗ trợ khách hàng -->
-<link rel="stylesheet" href="${pageContext.request.contextPath}/css/chatbox.css">
 <script>
     window.contextPath = '${pageContext.request.contextPath}';
 </script>

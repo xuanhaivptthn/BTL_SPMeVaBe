@@ -6,8 +6,6 @@
         <head>
             <meta charset="UTF-8">
             <title>Liên hệ nhóm phát triển - Cửa Hàng Mẹ & Bé</title>
-            <!-- Thư viện FontAwesome -->
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
             <style>
                 /* CSS tuỳ biến cho trang Liên hệ riêng biệt - 2 Columns Solid Style */
                 .contact-hero {
