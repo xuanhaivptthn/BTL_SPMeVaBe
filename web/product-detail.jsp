@@ -69,19 +69,7 @@
                     </c:when>
                     <c:otherwise>
                         <div class="out-of-stock-block">
-                            <p class="alert-error">Sản phẩm hiện đang hết hàng.</p>
-                            <c:if test="${not empty sessionScope.subscribeMessage}">
-                                <p class="alert-success">${sessionScope.subscribeMessage}</p>
-                                <c:remove var="subscribeMessage" scope="session" />
-                            </c:if>
-                            <form action="${pageContext.request.contextPath}/subscribe-back-in-stock" method="post" class="subscribe-form">
-                                <input type="hidden" name="productId" value="${product.maSanPham}" />
-                                <div class="form-group">
-                                    <label>Nhập email để nhận thông báo khi có hàng:</label>
-                                    <input type="email" name="email" class="form-control" placeholder="you@example.com" required />
-                                </div>
-                                <button type="submit" class="btn">Đăng ký nhận thông báo</button>
-                            </form>
+                            <p class="alert-error">Sản phẩm hiện tại đang tạm thời hết hàng.</p>
                         </div>
                     </c:otherwise>
                 </c:choose>

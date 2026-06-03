@@ -282,15 +282,33 @@ public class ThanhToanServlet extends HttpServlet {
 
             boolean success = dhDao.finalizeDraftOrder(dh);
             if (success) {
-                // Luôn lưu địa chỉ này làm địa chỉ mặc định mới hoặc cập nhật
                 DiaChiNhanHangDAO dcDao = new DiaChiNhanHangDAO();
-                model.DiaChiNhanHang dc = new model.DiaChiNhanHang();
-                dc.setKhachHangId(user.getId());
-                dc.setTenNguoiNhan(tenNguoiNhan);
-                dc.setSoDienThoai(sdtNhanHang);
-                dc.setDiaChi(diaChiGiaoHang);
-                dc.setDefault(true);
-                dcDao.insert(dc);
+                List<model.DiaChiNhanHang> existingAddresses = dcDao.getByKhachHangId(user.getId());
+                boolean exists = false;
+                int existingId = -1;
+                
+                for (model.DiaChiNhanHang a : existingAddresses) {
+                    if (a.getTenNguoiNhan().trim().equalsIgnoreCase(tenNguoiNhan.trim()) &&
+                        a.getSoDienThoai().trim().equals(sdtNhanHang.trim()) &&
+                        a.getDiaChi().trim().equalsIgnoreCase(diaChiGiaoHang.trim())) {
+                        exists = true;
+                        existingId = a.getId();
+                        break;
+                    }
+                }
+                
+                if (!exists) {
+                    model.DiaChiNhanHang dc = new model.DiaChiNhanHang();
+                    dc.setKhachHangId(user.getId());
+                    dc.setTenNguoiNhan(tenNguoiNhan);
+                    dc.setSoDienThoai(sdtNhanHang);
+                    dc.setDiaChi(diaChiGiaoHang);
+                    dc.setDefault(true);
+                    dcDao.insert(dc);
+                } else {
+                    // Update existing to be default (so it becomes the "most recent" and is selected by default next time)
+                    dcDao.updateDefault(user.getId(), existingId);
+                }
 
                 session.removeAttribute("cart");
                 session.removeAttribute("draftOrderId");

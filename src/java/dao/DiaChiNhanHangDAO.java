@@ -68,4 +68,33 @@ public class DiaChiNhanHangDAO {
             ps.executeUpdate();
         }
     }
+    
+    public boolean updateDefault(int khachHangId, int addressId) {
+        Connection conn = null;
+        try {
+            conn = DBConnect.getConnection();
+            conn.setAutoCommit(false);
+            
+            clearDefault(conn, khachHangId);
+            
+            String sql = "UPDATE DiaChiNhanHang SET is_default = 1 WHERE id = ?";
+            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setInt(1, addressId);
+                ps.executeUpdate();
+            }
+            
+            conn.commit();
+            return true;
+        } catch (SQLException ex) {
+            if (conn != null) {
+                try { conn.rollback(); } catch (SQLException e) { e.printStackTrace(); }
+            }
+            ex.printStackTrace();
+            return false;
+        } finally {
+            if (conn != null) {
+                try { conn.setAutoCommit(true); conn.close(); } catch (SQLException e) { e.printStackTrace(); }
+            }
+        }
+    }
 }
