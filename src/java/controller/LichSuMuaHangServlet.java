@@ -17,7 +17,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 @WebServlet(name = "OrderHistoryServlet", urlPatterns = {"/history"})
-public class OrderHistoryServlet extends HttpServlet {
+public class LichSuMuaHangServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)

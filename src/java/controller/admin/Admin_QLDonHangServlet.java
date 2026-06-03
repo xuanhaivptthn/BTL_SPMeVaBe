@@ -16,7 +16,7 @@ import model.ChiTietDonHang;
 import java.util.ArrayList;
 
 @WebServlet(name = "AdminOrderServlet", urlPatterns = {"/admin/orders"})
-public class AdminOrderServlet extends HttpServlet {
+public class Admin_QLDonHangServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)

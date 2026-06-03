@@ -23,7 +23,7 @@ import jakarta.servlet.http.Part;
     maxFileSize = 1024 * 1024 * 10,       // 10MB
     maxRequestSize = 1024 * 1024 * 50     // 50MB
 )
-public class AdminProductServlet extends HttpServlet {
+public class Admin_QLSanPhamServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)

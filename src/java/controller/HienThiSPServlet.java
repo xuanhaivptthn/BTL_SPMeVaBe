@@ -22,7 +22,7 @@ import java.util.List;
  * @author gmtfarcb
  */
 @WebServlet(name = "HienThiSP", urlPatterns = {"/products"})
-public class HienThiSP extends HttpServlet {
+public class HienThiSPServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>

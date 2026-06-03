@@ -13,7 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 @WebServlet(name = "SubscribeBackInStockServlet", urlPatterns = {"/subscribe-back-in-stock"})
-public class SubscribeBackInStockServlet extends HttpServlet {
+public class NhanTBRestockServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)

@@ -14,7 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @WebServlet(name = "ProductDetailServlet", urlPatterns = {"/product-detail"})
-public class ProductDetailServlet extends HttpServlet {
+public class TTSanPhamServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)

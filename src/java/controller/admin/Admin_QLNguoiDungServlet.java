@@ -14,7 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @WebServlet(name = "AdminUserServlet", urlPatterns = {"/admin/users"})
-public class AdminUserServlet extends HttpServlet {
+public class Admin_QLNguoiDungServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)

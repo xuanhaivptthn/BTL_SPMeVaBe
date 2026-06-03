@@ -12,7 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 @WebServlet(name = "ResetPasswordServlet", urlPatterns = {"/reset-password"})
-public class ResetPasswordServlet extends HttpServlet {
+public class ResetPWDServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
