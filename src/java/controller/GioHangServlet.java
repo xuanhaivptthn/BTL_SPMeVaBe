@@ -3,7 +3,6 @@ package controller;
 import dao.*;
 import model.*;
 
-import model.SanPham;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;

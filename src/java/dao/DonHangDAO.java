@@ -9,6 +9,10 @@ import java.util.List;
 
 public class DonHangDAO {
 
+    private static final String SQL_SELECT =
+        "SELECT id, khachHangId, ngayDat, tongTien, trangThai, tenNguoiNhan, sdtNhanHang, " +
+        "diaChiGiaoHang, ghiChu, khachHangDaCapNhat, maGiamGia, soTienGiam, phuongThucThanhToan FROM DonHang";
+
     public boolean insert(DonHang dh, List<ChiTietDonHang> chiTietList) {
         String sqlDonHang = "INSERT INTO DonHang (khachHangId, tongTien, trangThai, tenNguoiNhan, sdtNhanHang, diaChiGiaoHang, ghiChu, maGiamGia, soTienGiam, phuongThucThanhToan) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         String sqlChiTiet = "INSERT INTO ChiTietDonHang (donHangId, sanPhamId, soLuong, donGia) VALUES (?, ?, ?, ?)";
@@ -106,9 +110,7 @@ public class DonHangDAO {
         }
     }
 
-    public String getSQL_SELECT() {
-        return "SELECT id, khachHangId, ngayDat, tongTien, trangThai, tenNguoiNhan, sdtNhanHang, diaChiGiaoHang, ghiChu, khachHangDaCapNhat, maGiamGia, soTienGiam, phuongThucThanhToan FROM DonHang";
-    }
+
 
     private DonHang mapRow(ResultSet rs) throws SQLException {
         DonHang dh = new DonHang();
@@ -130,7 +132,7 @@ public class DonHangDAO {
     }
 
     public DonHang getById(int id) {
-        String sql = getSQL_SELECT() + " WHERE id = ? AND is_deleted = 0";
+        String sql = SQL_SELECT + " WHERE id = ? AND is_deleted = 0";
         try (Connection conn = DBConnect.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);
@@ -199,7 +201,7 @@ public class DonHangDAO {
 
     public List<DonHang> getAll() {
         List<DonHang> list = new ArrayList<>();
-        String sql = getSQL_SELECT() + " WHERE is_deleted = 0 ORDER BY ngayDat DESC";
+        String sql = SQL_SELECT + " WHERE is_deleted = 0 ORDER BY ngayDat DESC";
         try (Connection conn = DBConnect.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
@@ -219,7 +221,7 @@ public class DonHangDAO {
     
     public List<DonHang> getFilteredOrders(String khachHangId, String donHangId, String status) {
         List<DonHang> list = new ArrayList<>();
-        StringBuilder sql = new StringBuilder(getSQL_SELECT() + " WHERE is_deleted = 0");
+        StringBuilder sql = new StringBuilder(SQL_SELECT + " WHERE is_deleted = 0");
         List<Object> params = new ArrayList<>();
         
         if (khachHangId != null && !khachHangId.trim().isEmpty()) {
@@ -280,7 +282,7 @@ public class DonHangDAO {
 
     public List<DonHang> getByKhachHangId(int khachHangId) {
         List<DonHang> list = new ArrayList<>();
-        String sql = getSQL_SELECT() + " WHERE khachHangId = ? AND is_deleted = 0 ORDER BY ngayDat DESC";
+        String sql = SQL_SELECT + " WHERE khachHangId = ? AND is_deleted = 0 ORDER BY ngayDat DESC";
         try (Connection conn = DBConnect.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, khachHangId);

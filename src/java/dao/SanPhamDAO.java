@@ -101,11 +101,7 @@ public class SanPhamDAO {
             ps.setInt(8, p.getSoLuong());
             ps.setInt(9, p.getDanhMucId());
             ps.setInt(10, p.getMaSanPham());
-            int updated = ps.executeUpdate();
-            if (updated > 0) {
-                return true;
-            }
-            return false;
+            return ps.executeUpdate() > 0;
         } catch (SQLException ex) {
             ex.printStackTrace();
             return false;

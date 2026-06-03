@@ -3,8 +3,6 @@ package controller.admin;
 import dao.*;
 import model.*;
 
-import dao.NguoiDungDAO;
-import model.NguoiDung;
 import java.io.IOException;
 import java.util.List;
 import jakarta.servlet.ServletException;

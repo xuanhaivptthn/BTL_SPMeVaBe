@@ -3,7 +3,6 @@ package filter;
 import dao.*;
 import model.*;
 
-import model.NguoiDung;
 import java.io.IOException;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;

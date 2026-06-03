@@ -3,8 +3,6 @@ package controller;
 import dao.*;
 import model.*;
 
-import model.DanhGia;
-import model.NguoiDung;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;

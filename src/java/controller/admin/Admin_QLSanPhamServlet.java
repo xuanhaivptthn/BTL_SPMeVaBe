@@ -3,8 +3,6 @@ package controller.admin;
 import dao.*;
 import model.*;
 
-import dao.SanPhamDAO;
-import model.SanPham;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
