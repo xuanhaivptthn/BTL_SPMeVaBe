@@ -8,6 +8,38 @@
                 <head>
                     <meta charset="UTF-8">
                     <title>Danh sách sản phẩm</title>
+                    <style>
+                        .pagination {
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            gap: 8px;
+                            margin-top: 30px;
+                            margin-bottom: 20px;
+                        }
+                        .page-link {
+                            display: inline-flex;
+                            align-items: center;
+                            justify-content: center;
+                            width: 36px;
+                            height: 36px;
+                            border: 1px solid #ddd;
+                            border-radius: 4px;
+                            text-decoration: none;
+                            color: #333;
+                            font-weight: 500;
+                            transition: all 0.3s;
+                        }
+                        .page-link:hover {
+                            background-color: #f5f5f5;
+                            border-color: #ccc;
+                        }
+                        .page-link.active {
+                            background-color: #ff6b6b;
+                            color: white;
+                            border-color: #ff6b6b;
+                        }
+                    </style>
                 </head>
 
                 <body>
@@ -92,6 +124,7 @@
                                 <h2>Danh sách sản phẩm</h2>
                                 <div class="products-sort">
                                     <form action="products" method="GET" id="sortForm">
+                                        <input type="hidden" name="page" id="pageInput" value="${currentPage}">
                                         <input type="hidden" name="search" value="${param.search}">
                                         <c:if test="${not empty paramValues.category}">
                                             <c:forEach var="cat" items="${paramValues.category}">
@@ -159,6 +192,29 @@
                                             </a>
                                         </c:forEach>
                                     </div>
+                                    
+                                    <!-- Pagination -->
+                                    <c:if test="${totalPages > 1}">
+                                        <div class="pagination">
+                                            <c:if test="${currentPage > 1}">
+                                                <a href="javascript:void(0);" onclick="changePage(${currentPage - 1})" class="page-link">&laquo;</a>
+                                            </c:if>
+                                            
+                                            <c:forEach begin="1" end="${totalPages}" var="i">
+                                                <a href="javascript:void(0);" onclick="changePage(${i})" class="page-link ${currentPage == i ? 'active' : ''}">${i}</a>
+                                            </c:forEach>
+                                            
+                                            <c:if test="${currentPage < totalPages}">
+                                                <a href="javascript:void(0);" onclick="changePage(${currentPage + 1})" class="page-link">&raquo;</a>
+                                            </c:if>
+                                        </div>
+                                        <script>
+                                            function changePage(page) {
+                                                document.getElementById('pageInput').value = page;
+                                                document.getElementById('sortForm').submit();
+                                            }
+                                        </script>
+                                    </c:if>
                                 </c:otherwise>
                             </c:choose>
                         </main>
