@@ -6,6 +6,12 @@
             <file>file:/home/gmtfarcb/Desktop/BTL_SPMeVaBe/web/contact.jsp</file>
             <file>file:/home/gmtfarcb/Desktop/BTL_SPMeVaBe/web/checkout.jsp</file>
             <file>file:/home/gmtfarcb/Desktop/BTL_SPMeVaBe/web/products.jsp</file>
+            <file>file:/home/gmtfarcb/Desktop/BTL_SPMeVaBe/src/java/controller/admin/Admin_QLNguoiDungServlet.java</file>
+            <file>file:/home/gmtfarcb/Desktop/BTL_SPMeVaBe/src/java/controller/admin/Admin_QLSanPhamServlet.java</file>
+            <file>file:/home/gmtfarcb/Desktop/BTL_SPMeVaBe/src/java/controller/admin/Admin_QLDonHangServlet.java</file>
+            <file>file:/home/gmtfarcb/Desktop/BTL_SPMeVaBe/src/java/controller/auth/VerifyOtpServlet.java</file>
+            <file>file:/home/gmtfarcb/Desktop/BTL_SPMeVaBe/src/java/filter/AdminFilter.java</file>
+            <file>file:/home/gmtfarcb/Desktop/BTL_SPMeVaBe/src/java/model/CartItem.java</file>
         </group>
     </open-files>
 </project-private>

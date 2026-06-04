@@ -43,6 +43,20 @@
                         <label>Thông tin:</label>
                         <textarea name="info" class="form-control" rows="3" required></textarea>
                     </div>
+                    <div class="form-group">
+                        <label>Thành phần:</label>
+                        <textarea name="thanhPhan" class="form-control" rows="2"></textarea>
+                    </div>
+                    <div class="form-group" style="display: flex; gap: 15px;">
+                        <div style="flex: 1;">
+                            <label>Xuất xứ:</label>
+                            <input type="text" name="xuatXu" class="form-control"/>
+                        </div>
+                        <div style="flex: 1;">
+                            <label>Khối lượng:</label>
+                            <input type="text" name="khoiLuong" class="form-control"/>
+                        </div>
+                    </div>
                     <div class="form-group" style="display: flex; gap: 15px;">
                         <div style="flex: 1;">
                             <label>Giá:</label>

@@ -156,6 +156,9 @@
                                             data-price="${p.giaTien}"
                                             data-qty="${p.soLuong}"
                                             data-info="${fn:escapeXml(p.thongTinSanPham)}"
+                                            data-thanhphan="${fn:escapeXml(p.thanhPhan)}"
+                                            data-xuatxu="${fn:escapeXml(p.xuatXu)}"
+                                            data-khoiluong="${fn:escapeXml(p.khoiLuong)}"
                                             data-image="${p.hinhAnh}"
                                             data-category="${p.danhMucId}"
                                             onclick="editProduct(this)">Sửa</button>
@@ -231,6 +234,20 @@
                             <label>Thông tin:</label>
                             <textarea name="info" id="editInfo" class="form-control" rows="3" required></textarea>
                         </div>
+                        <div class="form-group">
+                            <label>Thành phần:</label>
+                            <textarea name="thanhPhan" id="editThanhPhan" class="form-control" rows="2"></textarea>
+                        </div>
+                        <div class="form-group" style="display: flex; gap: 15px;">
+                            <div style="flex: 1;">
+                                <label>Xuất xứ:</label>
+                                <input type="text" name="xuatXu" id="editXuatXu" class="form-control"/>
+                            </div>
+                            <div style="flex: 1;">
+                                <label>Khối lượng:</label>
+                                <input type="text" name="khoiLuong" id="editKhoiLuong" class="form-control"/>
+                            </div>
+                        </div>
                         <div class="form-group" style="display: flex; gap: 15px;">
                             <div style="flex: 1;">
                                 <label>Giá:</label>
@@ -280,6 +297,9 @@
             document.getElementById('formId').value = btn.getAttribute('data-id');
             document.getElementById('editName').value = btn.getAttribute('data-name');
             document.getElementById('editInfo').value = btn.getAttribute('data-info');
+            document.getElementById('editThanhPhan').value = btn.getAttribute('data-thanhphan') || '';
+            document.getElementById('editXuatXu').value = btn.getAttribute('data-xuatxu') || '';
+            document.getElementById('editKhoiLuong').value = btn.getAttribute('data-khoiluong') || '';
             document.getElementById('editPrice').value = btn.getAttribute('data-price');
             document.getElementById('editQty').value = btn.getAttribute('data-qty');
             document.getElementById('editImage').value = btn.getAttribute('data-image');

@@ -103,10 +103,16 @@ public class Admin_QLSanPhamServlet extends HttpServlet {
             String info = request.getParameter("info");
             double price = Double.parseDouble(request.getParameter("price"));
             int qty = Integer.parseInt(request.getParameter("quantity"));
+            String thanhPhan = request.getParameter("thanhPhan");
+            String xuatXu = request.getParameter("xuatXu");
+            String khoiLuong = request.getParameter("khoiLuong");
 
             SanPham sp = new SanPham();
             sp.setTenSanPham(name);
             sp.setThongTinSanPham(info);
+            sp.setThanhPhan(thanhPhan);
+            sp.setXuatXu(xuatXu);
+            sp.setKhoiLuong(khoiLuong);
             sp.setGiaTien(price);
             sp.setSoLuong(qty);
             String categoryParam = request.getParameter("categoryId");
@@ -165,11 +171,17 @@ public class Admin_QLSanPhamServlet extends HttpServlet {
             String info = request.getParameter("info");
             double price = Double.parseDouble(request.getParameter("price"));
             int qty = Integer.parseInt(request.getParameter("quantity"));
+            String thanhPhan = request.getParameter("thanhPhan");
+            String xuatXu = request.getParameter("xuatXu");
+            String khoiLuong = request.getParameter("khoiLuong");
 
             SanPham sp = new SanPham();
             sp.setMaSanPham(id);
             sp.setTenSanPham(name);
             sp.setThongTinSanPham(info);
+            sp.setThanhPhan(thanhPhan);
+            sp.setXuatXu(xuatXu);
+            sp.setKhoiLuong(khoiLuong);
             sp.setGiaTien(price);
             sp.setSoLuong(qty);
             String categoryParam = request.getParameter("categoryId");
