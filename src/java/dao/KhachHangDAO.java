@@ -80,4 +80,62 @@ public class KhachHangDAO {
         }
         return 0;
     }
+
+    public boolean addDiemTichLuy(int khachHangId, int diem) {
+        String sql = "UPDATE KhachHang SET diemTichLuy = diemTichLuy + ? WHERE id = ?";
+        try (Connection conn = DBConnect.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, diem);
+            ps.setInt(2, khachHangId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean recalculateAllPoints() {
+        Connection conn = null;
+        try {
+            conn = DBConnect.getConnection();
+            conn.setAutoCommit(false);
+            
+            // Set all points to 0
+            String sqlReset = "UPDATE KhachHang SET diemTichLuy = 0";
+            try (PreparedStatement ps = conn.prepareStatement(sqlReset)) {
+                ps.executeUpdate();
+            }
+            
+            // Calculate and update based on completed orders
+            String sqlUpdate = "UPDATE KhachHang k " +
+                               "JOIN (SELECT khachHangId, SUM(tongTien) as total FROM DonHang WHERE trangThai = 'DELIVERED' AND is_deleted = 0 GROUP BY khachHangId) d " +
+                               "ON k.id = d.khachHangId " +
+                               "SET k.diemTichLuy = FLOOR(d.total / 1000)";
+            try (PreparedStatement ps = conn.prepareStatement(sqlUpdate)) {
+                ps.executeUpdate();
+            }
+            
+            conn.commit();
+            return true;
+        } catch (SQLException ex) {
+            if (conn != null) {
+                try {
+                    conn.rollback();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            ex.printStackTrace();
+            return false;
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.setAutoCommit(true);
+                    conn.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 }

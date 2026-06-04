@@ -81,7 +81,26 @@ public class Admin_QLDonHangServlet extends HttpServlet {
             int id = Integer.parseInt(request.getParameter("id"));
             String status = request.getParameter("status");
             DonHangDAO dao = new DonHangDAO();
-            dao.updateStatus(id, status);
+            DonHang oldDh = dao.getById(id);
+            
+            if (dao.updateStatus(id, status)) {
+                if (oldDh != null) {
+                    KhachHangDAO khDao = new KhachHangDAO();
+                    // Nếu cập nhật thành DELIVERED từ trạng thái khác
+                    if ("DELIVERED".equals(status) && !"DELIVERED".equals(oldDh.getTrangThai())) {
+                        int diem = (int) (oldDh.getTongTien() / 1000);
+                        khDao.addDiemTichLuy(oldDh.getKhachHangId(), diem);
+                    } 
+                    // Nếu đổi từ DELIVERED sang trạng thái khác (hủy, vv)
+                    else if (!"DELIVERED".equals(status) && "DELIVERED".equals(oldDh.getTrangThai())) {
+                        int diem = (int) (oldDh.getTongTien() / 1000);
+                        khDao.addDiemTichLuy(oldDh.getKhachHangId(), -diem);
+                    }
+                }
+            }
+        } else if ("recalculatePoints".equals(action)) {
+            KhachHangDAO khDao = new KhachHangDAO();
+            khDao.recalculateAllPoints();
         } else if ("delete".equals(action)) {
             int id = Integer.parseInt(request.getParameter("id"));
             DonHangDAO dao = new DonHangDAO();
