@@ -31,6 +31,13 @@ public class RegisterServlet extends HttpServlet {
         String dienThoai = request.getParameter("dienThoai");
         String tenDangNhap = request.getParameter("tenDangNhap");
         String matKhau = request.getParameter("matKhau");
+        String matKhau1 = request.getParameter("matKhau1");
+
+        if (matKhau != null && !matKhau.equals(matKhau1)) {
+            request.setAttribute("error", "Mật khẩu nhập lại không trùng khớp.");
+            request.getRequestDispatcher("/register.jsp").forward(request, response);
+            return;
+        }
 
         KhachHang k = new KhachHang();
         k.setHoTen(hoTen);
