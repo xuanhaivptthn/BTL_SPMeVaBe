@@ -187,11 +187,20 @@
                                     </c:choose>
                                 </td>
                                 <td>
-                                    <a href="${pageContext.request.contextPath}/history?orderId=${dh.id}"
-                                       class="btn-view-detail"
-                                       onclick="event.stopPropagation();">
-                                        <i class="fas fa-eye"></i> Xem chi tiết
-                                    </a>
+                                    <div style="display: flex; gap: 6px; flex-wrap: nowrap;">
+                                        <a href="${pageContext.request.contextPath}/history?orderId=${dh.id}"
+                                           class="btn-view-detail"
+                                           onclick="event.stopPropagation();">
+                                            <i class="fas fa-eye"></i> Xem chi tiết
+                                        </a>
+                                        <c:if test="${dh.trangThai == 'DELIVERED'}">
+                                            <a href="${pageContext.request.contextPath}/history?action=print&orderId=${dh.id}"
+                                               target="_blank" class="btn-view-detail" style=""
+                                               onclick="event.stopPropagation();" title="In hoá đơn">
+                                                In hoá đơn
+                                            </a>
+                                        </c:if>
+                                    </div>
                                 </td>
                             </tr>
                         </c:forEach>

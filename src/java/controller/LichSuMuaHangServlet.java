@@ -26,9 +26,30 @@ public class LichSuMuaHangServlet extends HttpServlet {
             return;
         }
 
+        String action = request.getParameter("action");
         String orderIdParam = request.getParameter("orderId");
 
-        if (orderIdParam != null && !orderIdParam.trim().isEmpty()) {
+        if ("print".equals(action) && orderIdParam != null && !orderIdParam.trim().isEmpty()) {
+            try {
+                int orderId = Integer.parseInt(orderIdParam.trim());
+                DonHangDAO dao = new DonHangDAO();
+                DonHang donHang = dao.getById(orderId);
+
+                // Security: only allow viewing own orders and must be DELIVERED
+                if (donHang == null || donHang.getKhachHangId() != user.getId() || !"DELIVERED".equals(donHang.getTrangThai())) {
+                    response.sendRedirect(request.getContextPath() + "/history");
+                    return;
+                }
+
+                List<ChiTietDonHang> chiTiet = dao.getChiTietWithTenSP(orderId);
+                request.setAttribute("order", donHang);
+                request.setAttribute("chiTiet", chiTiet);
+                request.getRequestDispatcher("/customer_invoice.jsp").forward(request, response);
+
+            } catch (NumberFormatException e) {
+                response.sendRedirect(request.getContextPath() + "/history");
+            }
+        } else if (orderIdParam != null && !orderIdParam.trim().isEmpty()) {
             // Show order detail
             try {
                 int orderId = Integer.parseInt(orderIdParam.trim());

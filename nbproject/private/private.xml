@@ -12,6 +12,18 @@
             <file>file:/home/gmtfarcb/Desktop/BTL_SPMeVaBe/src/java/controller/auth/VerifyOtpServlet.java</file>
             <file>file:/home/gmtfarcb/Desktop/BTL_SPMeVaBe/src/java/filter/AdminFilter.java</file>
             <file>file:/home/gmtfarcb/Desktop/BTL_SPMeVaBe/src/java/model/CartItem.java</file>
+            <file>file:/home/gmtfarcb/Desktop/BTL_SPMeVaBe/web/product-detail.jsp</file>
+            <file>file:/home/gmtfarcb/Desktop/BTL_SPMeVaBe/src/java/controller/TTSanPhamServlet.java</file>
+            <file>file:/home/gmtfarcb/Desktop/BTL_SPMeVaBe/src/java/dao/SanPhamDAO.java</file>
+            <file>file:/home/gmtfarcb/Desktop/BTL_SPMeVaBe/src/java/model/SanPham.java</file>
+            <file>file:/home/gmtfarcb/Desktop/BTL_SPMeVaBe/web/profile.jsp</file>
+            <file>file:/home/gmtfarcb/Desktop/BTL_SPMeVaBe/web/register.jsp</file>
+            <file>file:/home/gmtfarcb/Desktop/BTL_SPMeVaBe/web/index.jsp</file>
+            <file>file:/home/gmtfarcb/Desktop/BTL_SPMeVaBe/src/java/controller/HienThiSPServlet.java</file>
+            <file>file:/home/gmtfarcb/Desktop/BTL_SPMeVaBe/src/java/dao/NguoiDungDAO.java</file>
+            <file>file:/home/gmtfarcb/Desktop/BTL_SPMeVaBe/web/admin/orders.jsp</file>
+            <file>file:/home/gmtfarcb/Desktop/BTL_SPMeVaBe/web/history.jsp</file>
+            <file>file:/home/gmtfarcb/Desktop/BTL_SPMeVaBe/web/customer_invoice.jsp</file>
         </group>
     </open-files>
 </project-private>

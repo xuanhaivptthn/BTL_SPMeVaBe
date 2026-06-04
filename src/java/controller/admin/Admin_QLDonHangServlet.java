@@ -23,6 +23,9 @@ public class Admin_QLDonHangServlet extends HttpServlet {
         if ("detail".equals(action)) {
             handleDetail(request, response);
             return;
+        } else if ("print".equals(action)) {
+            handlePrint(request, response);
+            return;
         }
         
         String khachHangId = request.getParameter("khachHangId");
@@ -68,6 +71,32 @@ public class Admin_QLDonHangServlet extends HttpServlet {
             request.setAttribute("chiTiet", chiTiet);
             
             request.getRequestDispatcher("/admin/order_detail_admin.jsp").forward(request, response);
+        } catch (NumberFormatException e) {
+            response.sendRedirect(request.getContextPath() + "/admin/orders");
+        }
+    }
+
+    private void handlePrint(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String idParam = request.getParameter("id");
+        if (idParam == null || idParam.trim().isEmpty()) {
+            response.sendRedirect(request.getContextPath() + "/admin/orders");
+            return;
+        }
+        
+        try {
+            int id = Integer.parseInt(idParam.trim());
+            DonHangDAO dao = new DonHangDAO();
+            DonHang dh = dao.getById(id);
+            if (dh == null || !"DELIVERED".equals(dh.getTrangThai())) {
+                response.sendRedirect(request.getContextPath() + "/admin/orders");
+                return;
+            }
+            List<ChiTietDonHang> chiTiet = dao.getChiTietWithTenSP(id);
+            request.setAttribute("order", dh);
+            request.setAttribute("chiTiet", chiTiet);
+            
+            request.getRequestDispatcher("/admin/invoice.jsp").forward(request, response);
         } catch (NumberFormatException e) {
             response.sendRedirect(request.getContextPath() + "/admin/orders");
         }

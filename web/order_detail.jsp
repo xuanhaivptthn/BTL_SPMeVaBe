@@ -286,6 +286,16 @@
                 <i class="fas fa-arrow-left"></i> Lịch sử mua hàng
             </a>
             <h2>Đơn hàng #${donHang.id}</h2>
+            <c:if test="${donHang.trangThai == 'DELIVERED'}">
+                <div style="margin-left: auto; display: flex; gap: 10px;">
+                    <a href="${pageContext.request.contextPath}/history?action=print&orderId=${donHang.id}" target="_blank" class="btn" style="background: #2563eb; color: white; border-color: #1d4ed8; display: flex; align-items: center; gap: 6px; padding: 6px 14px;">
+                        <i class="fas fa-print"></i> In hoá đơn
+                    </a>
+                    <a href="${pageContext.request.contextPath}/history?action=exportTxt&orderId=${donHang.id}" class="btn" style="background: #e91e63; color: white; border-color: #d81b60; display: flex; align-items: center; gap: 6px; padding: 6px 14px;">
+                        <i class="fas fa-download"></i> Tải hoá đơn TXT
+                    </a>
+                </div>
+            </c:if>
             <c:choose>
                 <c:when test="${donHang.trangThai == 'PENDING'}">
                     <span class="status-badge status-PENDING">Đang chờ xử lý</span>

@@ -160,9 +160,9 @@ public class SanPhamDAO {
         } else if ("price_desc".equals(sort)) {
             sql.append(" ORDER BY GiaTien DESC");
         } else {
-            sql.append(" ORDER BY MaSanPham DESC");
+            sql.append(" ORDER BY GiaTien DESC");
         }
-
+//        sql.append(" TenSanPham DESC");
         try (Connection conn = DBConnect.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql.toString())) {
              

@@ -300,6 +300,13 @@
             </div>
             
             <div class="detail-section" style="display: flex; gap: 10px; justify-content: flex-end;">
+                <!-- Xuất hoá đơn -->
+                <c:if test="${order.trangThai == 'DELIVERED'}">
+                    <a href="${pageContext.request.contextPath}/admin/orders?action=print&id=${order.id}"
+                        target="_blank" class="btn btn-secondary" style="background: #e91e63; color: white; border-color: #d81b60; display:flex; align-items:center; gap:6px;">
+                        <i class="fas fa-print"></i> In Hoá Đơn
+                    </a>
+                </c:if>
                 <!-- Cập nhật trạng thái -->
                 <form action="${pageContext.request.contextPath}/admin/orders" method="post" style="display:flex; gap:10px; align-items:center;">
                     <input type="hidden" name="action" value="updateStatus"/>

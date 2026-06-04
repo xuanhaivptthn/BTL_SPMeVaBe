@@ -386,6 +386,13 @@
                                                             class="btn-view" title="Xem chi tiết đơn hàng">
                                                             <i class="fas fa-eye"></i> Chi tiết
                                                         </a>
+                                                        <!-- Nút xuất hoá đơn -->
+                                                        <c:if test="${o.trangThai == 'DELIVERED'}">
+                                                            <a href="${pageContext.request.contextPath}/admin/orders?action=print&id=${o.id}"
+                                                                target="_blank" class="btn-view" style="" title="Xuất hoá đơn">
+                                                                In hoá đơn
+                                                            </a>
+                                                        </c:if>
                                                         <!-- Cập nhật trạng thái -->
                                                         <form action="${pageContext.request.contextPath}/admin/orders"
                                                             method="post" style="display:flex; gap:6px;">
