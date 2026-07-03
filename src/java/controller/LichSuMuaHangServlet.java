@@ -2,6 +2,8 @@ package controller;
 
 import dao.*;
 import model.*;
+import io.jsonwebtoken.Claims;
+import utils.JwtUtil;
 
 import java.io.IOException;
 import java.util.List;
@@ -10,7 +12,6 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
 @WebServlet(name = "OrderHistoryServlet", urlPatterns = {"/history"})
 public class LichSuMuaHangServlet extends HttpServlet {
@@ -18,13 +19,12 @@ public class LichSuMuaHangServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        NguoiDung user = (NguoiDung) session.getAttribute("user");
-
-        if (user == null) {
+        Claims claims = (Claims) request.getAttribute("jwtClaims");
+        if (claims == null) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
+        int userId = JwtUtil.getUserId(claims);
 
         String action = request.getParameter("action");
         String orderIdParam = request.getParameter("orderId");
@@ -36,7 +36,7 @@ public class LichSuMuaHangServlet extends HttpServlet {
                 DonHang donHang = dao.getById(orderId);
 
                 // Security: only allow viewing own orders and must be DELIVERED
-                if (donHang == null || donHang.getKhachHangId() != user.getId() || !"DELIVERED".equals(donHang.getTrangThai())) {
+                if (donHang == null || donHang.getKhachHangId() != userId || !"DELIVERED".equals(donHang.getTrangThai())) {
                     response.sendRedirect(request.getContextPath() + "/history");
                     return;
                 }
@@ -57,7 +57,7 @@ public class LichSuMuaHangServlet extends HttpServlet {
                 DonHang donHang = dao.getById(orderId);
 
                 // Security: only allow viewing own orders
-                if (donHang == null || donHang.getKhachHangId() != user.getId()) {
+                if (donHang == null || donHang.getKhachHangId() != userId) {
                     response.sendRedirect(request.getContextPath() + "/history");
                     return;
                 }
@@ -73,7 +73,7 @@ public class LichSuMuaHangServlet extends HttpServlet {
         } else {
             // Show history list
             DonHangDAO dao = new DonHangDAO();
-            List<DonHang> history = dao.getByKhachHangId(user.getId());
+            List<DonHang> history = dao.getByKhachHangId(userId);
 
             request.setAttribute("history", history);
             request.getRequestDispatcher("/history.jsp").forward(request, response);
@@ -83,13 +83,12 @@ public class LichSuMuaHangServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        NguoiDung user = (NguoiDung) session.getAttribute("user");
-
-        if (user == null) {
+        Claims claims = (Claims) request.getAttribute("jwtClaims");
+        if (claims == null) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
+        int userId = JwtUtil.getUserId(claims);
 
         String action = request.getParameter("action");
 
@@ -104,7 +103,7 @@ public class LichSuMuaHangServlet extends HttpServlet {
                 DonHang donHang = dao.getById(orderId);
 
                 // Security: only allow updating own orders
-                if (donHang != null && donHang.getKhachHangId() == user.getId()) {
+                if (donHang != null && donHang.getKhachHangId() == userId) {
                     boolean updated = dao.updateContactInfo(orderId, tenNguoiNhan, sdtNhanHang, diaChiGiaoHang);
                     if (updated) {
                         response.sendRedirect(request.getContextPath() + "/history?orderId=" + orderId + "&success=1");
@@ -123,7 +122,7 @@ public class LichSuMuaHangServlet extends HttpServlet {
                 DonHang donHang = dao.getById(orderId);
 
                 // Security: only allow cancelling own orders
-                if (donHang != null && donHang.getKhachHangId() == user.getId()) {
+                if (donHang != null && donHang.getKhachHangId() == userId) {
                     boolean cancelled = dao.cancelOrder(orderId);
                     if (cancelled) {
                         response.sendRedirect(request.getContextPath() + "/history?orderId=" + orderId + "&cancelled=1");

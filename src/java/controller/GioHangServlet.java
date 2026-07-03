@@ -2,6 +2,9 @@ package controller;
 
 import dao.*;
 import model.*;
+import io.jsonwebtoken.Claims;
+import model.Role;
+import utils.JwtUtil;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -16,19 +19,25 @@ import jakarta.servlet.http.HttpSession;
 @WebServlet(name = "CartServlet", urlPatterns = {"/cart"})
 public class GioHangServlet extends HttpServlet {
 
+    /** Returns true if the current JWT user is a customer (not admin/staff). */
+    private boolean isCustomer(HttpServletRequest request) {
+        Claims claims = (Claims) request.getAttribute("jwtClaims");
+        if (claims == null) return false;
+        return JwtUtil.getRole(claims) == Role.CUSTOMER;
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-        
+
         Integer draftOrderId = (Integer) session.getAttribute("draftOrderId");
         if (draftOrderId != null) {
             new dao.DonHangDAO().deleteDraftOrder(draftOrderId);
             session.removeAttribute("draftOrderId");
         }
-        
-        model.NguoiDung user = (model.NguoiDung) session.getAttribute("user");
-        if (user == null || "ADMIN".equals(user.getRole()) || "STAFF".equals(user.getRole())) {
+
+        if (!isCustomer(request)) {
             session.setAttribute("redirectAfterLogin", "/cart");
             response.sendRedirect(request.getContextPath() + "/login");
             return;
@@ -37,7 +46,7 @@ public class GioHangServlet extends HttpServlet {
         Map<Integer, Integer> cart = (Map<Integer, Integer>) session.getAttribute("cart");
         java.util.List<model.CartItem> cartProducts = new java.util.ArrayList<>();
         double totalPrice = 0;
-        
+
         if (cart != null && !cart.isEmpty()) {
             dao.SanPhamDAO dao = new dao.SanPhamDAO();
             for (Map.Entry<Integer, Integer> entry : cart.entrySet()) {
@@ -48,7 +57,7 @@ public class GioHangServlet extends HttpServlet {
                 }
             }
         }
-        
+
         request.setAttribute("cartProducts", cartProducts);
         request.setAttribute("totalPrice", totalPrice);
         request.getRequestDispatcher("/cart.jsp").forward(request, response);
@@ -70,7 +79,7 @@ public class GioHangServlet extends HttpServlet {
         if ("add".equals(action)) {
             try {
                 int productId = Integer.parseInt(request.getParameter("productId"));
-                int quantity = Integer.parseInt(request.getParameter("quantity"));
+                int quantity  = Integer.parseInt(request.getParameter("quantity"));
                 cart.put(productId, cart.getOrDefault(productId, 0) + quantity);
             } catch (NumberFormatException e) {
                 // Ignore
@@ -78,7 +87,7 @@ public class GioHangServlet extends HttpServlet {
         } else if ("update".equals(action)) {
             try {
                 int productId = Integer.parseInt(request.getParameter("productId"));
-                int quantity = Integer.parseInt(request.getParameter("quantity"));
+                int quantity  = Integer.parseInt(request.getParameter("quantity"));
                 if (quantity <= 0) {
                     cart.remove(productId);
                 } else {
@@ -95,9 +104,8 @@ public class GioHangServlet extends HttpServlet {
                 // Ignore
             }
         }
-        
-        model.NguoiDung user = (model.NguoiDung) session.getAttribute("user");
-        if (user == null || "ADMIN".equals(user.getRole()) || "STAFF".equals(user.getRole())) {
+
+        if (!isCustomer(request)) {
             session.setAttribute("redirectAfterLogin", "/cart");
             response.sendRedirect(request.getContextPath() + "/login");
             return;

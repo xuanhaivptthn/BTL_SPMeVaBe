@@ -1,7 +1,8 @@
 package filter;
 
-import dao.*;
-import model.*;
+import io.jsonwebtoken.Claims;
+import model.Role;
+import utils.JwtUtil;
 
 import java.io.IOException;
 import jakarta.servlet.Filter;
@@ -13,36 +14,55 @@ import jakarta.servlet.ServletResponse;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
+/**
+ * AdminFilter — guards the /admin/* URL space.
+ *
+ * Access rules:
+ *   ADMIN  → full access (all /admin/* pages including /admin/users)
+ *   STAFF  → partial access (/admin/* EXCEPT /admin/users)
+ *   Others → redirect to /login or 403 Forbidden
+ *
+ * Authentication is checked via the JWT cookie (not HTTP session).
+ */
 @WebFilter(filterName = "AdminFilter", urlPatterns = {"/admin/*"})
 public class AdminFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
-        
-        HttpServletRequest req = (HttpServletRequest) request;
+
+        HttpServletRequest  req = (HttpServletRequest)  request;
         HttpServletResponse res = (HttpServletResponse) response;
-        HttpSession session = req.getSession(false);
-        
-        boolean loggedIn = (session != null && session.getAttribute("user") != null);
-        
-        if (loggedIn) {
-            NguoiDung user = (NguoiDung) session.getAttribute("user");
-            if ("ADMIN".equals(user.getRole()) || "STAFF".equals(user.getRole())) {
-                chain.doFilter(request, response);
-            } else {
-                res.sendError(HttpServletResponse.SC_FORBIDDEN, "Bạn không có quyền truy cập trang quản trị!");
-            }
-        } else {
+
+        // AuthFilter already parsed the token; re-read from request attribute
+        Claims claims = (Claims) req.getAttribute("jwtClaims");
+        if (claims == null) {
+            // No valid token — not logged in
             res.sendRedirect(req.getContextPath() + "/login");
+            return;
         }
+
+        Role role = JwtUtil.getRole(claims);
+
+        if (!role.hasAdminAccess()) {
+            // Logged in but not an admin/staff
+            res.sendError(HttpServletResponse.SC_FORBIDDEN,
+                    "Bạn không có quyền truy cập trang quản trị!");
+            return;
+        }
+
+        // STAFF cannot access user management pages
+        String requestPath = req.getServletPath();
+        if (role == Role.STAFF && requestPath != null && requestPath.startsWith("/admin/users")) {
+            res.sendError(HttpServletResponse.SC_FORBIDDEN,
+                    "Nhân viên không có quyền quản lý tài khoản người dùng!");
+            return;
+        }
+
+        chain.doFilter(request, response);
     }
 
-    @Override
-    public void init(FilterConfig filterConfig) throws ServletException {}
-
-    @Override
-    public void destroy() {}
+    @Override public void init(FilterConfig fc) throws ServletException {}
+    @Override public void destroy() {}
 }

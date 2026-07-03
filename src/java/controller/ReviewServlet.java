@@ -2,6 +2,8 @@ package controller;
 
 import dao.*;
 import model.*;
+import io.jsonwebtoken.Claims;
+import utils.JwtUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,7 +17,6 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 
 @MultipartConfig(
@@ -106,15 +107,15 @@ public class ReviewServlet extends HttpServlet {
             review.setAnDanh(isAnonymous);
             review.setAnhDanhGia(savedImagePath);
 
-            HttpSession session = request.getSession();
-            NguoiDung user = (NguoiDung) session.getAttribute("user");
+            Claims claims = (Claims) request.getAttribute("jwtClaims");
 
-            if (user != null) {
-                review.setKhachHangId(user.getId());
+            if (claims != null) {
+                review.setKhachHangId(JwtUtil.getUserId(claims));
+                String displayName = JwtUtil.getDisplayName(claims);
                 if (isAnonymous) {
                     review.setHoTen("Khách hàng");
                 } else {
-                    review.setHoTen(user.getHoTen());
+                    review.setHoTen(displayName);
                 }
             } else {
                 review.setKhachHangId(null);

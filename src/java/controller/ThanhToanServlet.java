@@ -2,6 +2,9 @@ package controller;
 
 import dao.*;
 import model.*;
+import io.jsonwebtoken.Claims;
+import model.Role;
+import utils.JwtUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,12 +25,13 @@ public class ThanhToanServlet extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession();
 
-        model.NguoiDung user = (model.NguoiDung) session.getAttribute("user");
-        if (user == null || "ADMIN".equals(user.getRole()) || "STAFF".equals(user.getRole())) {
+        Claims claims = (Claims) request.getAttribute("jwtClaims");
+        if (claims == null || JwtUtil.getRole(claims) != Role.CUSTOMER) {
             session.setAttribute("redirectAfterLogin", "/cart");
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
+        int userId = JwtUtil.getUserId(claims);
 
         Map<Integer, Integer> cart = (Map<Integer, Integer>) session.getAttribute("cart");
         if (cart == null || cart.isEmpty()) {
@@ -40,7 +44,7 @@ public class ThanhToanServlet extends HttpServlet {
         
         // Lấy danh sách địa chỉ nhận hàng
         DiaChiNhanHangDAO dcDao = new DiaChiNhanHangDAO();
-        List<model.DiaChiNhanHang> listDiaChi = dcDao.getByKhachHangId(user.getId());
+        List<model.DiaChiNhanHang> listDiaChi = dcDao.getByKhachHangId(userId);
         request.setAttribute("listDiaChi", listDiaChi);
 
         // Lấy danh sách sản phẩm trong giỏ hàng để hiển thị
@@ -74,7 +78,7 @@ public class ThanhToanServlet extends HttpServlet {
         if (draftOrderId == null) {
             // Khởi tạo đơn hàng nháp mới (UNPAID)
             draftDh = new DonHang();
-            draftDh.setKhachHangId(user.getId());
+            draftDh.setKhachHangId(userId);
             draftDh.setTongTien(totalPrice);
             draftDh.setTrangThai("UNPAID");
             
@@ -103,7 +107,7 @@ public class ThanhToanServlet extends HttpServlet {
             List<ChiTietDonHang> chiTietList = new ArrayList<>();
             for (model.CartItem item : cartProducts) {
                 ChiTietDonHang ct = new ChiTietDonHang();
-                ct.setSanPhamId(item.getProduct().getMaSanPham());
+                ct.setSanPhamId(item.getProduct().getId());
                 ct.setSoLuong(item.getQuantity());
                 ct.setDonGia(item.getProduct().getGiaTien());
                 chiTietList.add(ct);
@@ -157,13 +161,14 @@ public class ThanhToanServlet extends HttpServlet {
             return;
         }
 
-        // Lấy Khách Hàng đang đăng nhập
-        model.NguoiDung user = (model.NguoiDung) session.getAttribute("user");
-        if (user == null || "ADMIN".equals(user.getRole()) || "STAFF".equals(user.getRole())) {
+        // Lấy Khách Hàng đang đăng nhập từ JWT
+        Claims claims = (Claims) request.getAttribute("jwtClaims");
+        if (claims == null || JwtUtil.getRole(claims) != Role.CUSTOMER) {
             session.setAttribute("redirectAfterLogin", "/cart");
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
+        int userId = JwtUtil.getUserId(claims);
 
         String action = request.getParameter("action");
         if (action == null) {
@@ -278,7 +283,7 @@ public class ThanhToanServlet extends HttpServlet {
             boolean success = dhDao.finalizeDraftOrder(dh);
             if (success) {
                 DiaChiNhanHangDAO dcDao = new DiaChiNhanHangDAO();
-                List<model.DiaChiNhanHang> existingAddresses = dcDao.getByKhachHangId(user.getId());
+                List<model.DiaChiNhanHang> existingAddresses = dcDao.getByKhachHangId(userId);
                 boolean exists = false;
                 int existingId = -1;
                 
@@ -294,7 +299,7 @@ public class ThanhToanServlet extends HttpServlet {
                 
                 if (!exists) {
                     model.DiaChiNhanHang dc = new model.DiaChiNhanHang();
-                    dc.setKhachHangId(user.getId());
+                    dc.setKhachHangId(userId);
                     dc.setTenNguoiNhan(tenNguoiNhan);
                     dc.setSoDienThoai(sdtNhanHang);
                     dc.setDiaChi(diaChiGiaoHang);
@@ -302,7 +307,7 @@ public class ThanhToanServlet extends HttpServlet {
                     dcDao.insert(dc);
                 } else {
                     // Update existing to be default (so it becomes the "most recent" and is selected by default next time)
-                    dcDao.updateDefault(user.getId(), existingId);
+                    dcDao.updateDefault(userId, existingId);
                 }
 
                 session.removeAttribute("cart");

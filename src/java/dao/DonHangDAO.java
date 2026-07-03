@@ -46,7 +46,7 @@ public class DonHangDAO {
             
             if (donHangId > 0 && chiTietList != null && !chiTietList.isEmpty()) {
                 // First, verify and decrement stock for each product
-                String sqlUpdateStock = "UPDATE SanPham SET SoLuong = SoLuong - ? WHERE MaSanPham = ? AND SoLuong >= ?";
+                String sqlUpdateStock = "UPDATE SanPham SET soLuong = soLuong - ? WHERE id = ? AND soLuong >= ?";
                 try (PreparedStatement psUpdate = conn.prepareStatement(sqlUpdateStock)) {
                     for (ChiTietDonHang ct : chiTietList) {
                         psUpdate.setInt(1, ct.getSoLuong());
@@ -147,9 +147,9 @@ public class DonHangDAO {
 
     public List<ChiTietDonHang> getChiTietWithTenSP(int donHangId) {
         List<ChiTietDonHang> list = new ArrayList<>();
-        String sql = "SELECT ct.id, ct.donHangId, ct.sanPhamId, ct.soLuong, ct.donGia, sp.TenSanPham "
+        String sql = "SELECT ct.id, ct.donHangId, ct.sanPhamId, ct.soLuong, ct.donGia, sp.tenSanPham "
                    + "FROM ChiTietDonHang ct "
-                   + "JOIN SanPham sp ON ct.sanPhamId = sp.MaSanPham "
+                   + "JOIN SanPham sp ON ct.sanPhamId = sp.id "
                    + "WHERE ct.donHangId = ?";
         try (Connection conn = DBConnect.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -162,7 +162,7 @@ public class DonHangDAO {
                     ct.setSanPhamId(rs.getInt("sanPhamId"));
                     ct.setSoLuong(rs.getInt("soLuong"));
                     ct.setDonGia(rs.getDouble("donGia"));
-                    ct.setTenSanPham(rs.getString("TenSanPham"));
+                    ct.setTenSanPham(rs.getString("tenSanPham"));
                     list.add(ct);
                 }
             }
@@ -319,7 +319,7 @@ public class DonHangDAO {
             
             // Lấy danh sách chi tiết đơn hàng để hoàn lại kho
             List<ChiTietDonHang> list = getChiTietWithTenSP(donHangId);
-            String sqlRestoreStock = "UPDATE SanPham SET SoLuong = SoLuong + ? WHERE MaSanPham = ?";
+            String sqlRestoreStock = "UPDATE SanPham SET soLuong = soLuong + ? WHERE id = ?";
             try (PreparedStatement psRestore = conn.prepareStatement(sqlRestoreStock)) {
                 for (ChiTietDonHang ct : list) {
                     psRestore.setInt(1, ct.getSoLuong());

@@ -2,6 +2,9 @@ package controller.admin;
 
 import dao.*;
 import model.*;
+import io.jsonwebtoken.Claims;
+import model.Role;
+import utils.JwtUtil;
 
 import java.io.IOException;
 import java.util.List;
@@ -17,6 +20,13 @@ public class Admin_QLNguoiDungServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        // AdminFilter already checked admin access; verify ADMIN-only here (STAFF cannot manage users)
+        Claims claims = (Claims) request.getAttribute("jwtClaims");
+        if (claims == null || JwtUtil.getRole(claims) != Role.ADMIN) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN,
+                "Chỉ quản trị viên mới có quyền quản lý người dùng!");
+            return;
+        }
         String search = request.getParameter("search");
         NguoiDungDAO dao = new NguoiDungDAO();
         List<NguoiDung> list;
@@ -33,6 +43,13 @@ public class Admin_QLNguoiDungServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        // Double-check: only ADMIN may mutate user data
+        Claims claims = (Claims) request.getAttribute("jwtClaims");
+        if (claims == null || JwtUtil.getRole(claims) != Role.ADMIN) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN,
+                "Chỉ quản trị viên mới có quyền quản lý người dùng!");
+            return;
+        }
         String action = request.getParameter("action");
         NguoiDungDAO dao = new NguoiDungDAO();
 

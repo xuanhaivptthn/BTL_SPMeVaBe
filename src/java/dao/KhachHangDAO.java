@@ -1,6 +1,7 @@
 package dao;
 
 import model.KhachHang;
+import utils.PasswordUtil;
 import java.sql.*;
 
 public class KhachHangDAO {
@@ -20,7 +21,7 @@ public class KhachHangDAO {
                 ps1.setString(2, k.getEmail());
                 ps1.setString(3, k.getDienThoai());
                 ps1.setString(4, k.getTenDangNhap());
-                ps1.setString(5, k.getMatKhau());
+                ps1.setString(5, PasswordUtil.hash(k.getMatKhau()));
                 ps1.setString(6, "CUSTOMER");
                 ps1.setString(7, "ACTIVE");
                 ps1.executeUpdate();

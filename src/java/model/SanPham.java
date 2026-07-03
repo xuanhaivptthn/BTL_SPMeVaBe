@@ -1,62 +1,59 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class SanPham {
 
-    private int MaSanPham;
-    private String TenSanPham;
-    private String ThongTinSanPham;
+    private int id;
+    private String tenSanPham;
+    private String thongTinSanPham;
     private String thanhPhan;
     private String xuatXu;
     private String khoiLuong;
-    private double GiaTien;
-    private int SoLuong;
+    private double giaTien;
+    private int soLuong;
     private int danhMucId;
     private String hinhAnh;
 
     public SanPham() {
     }
 
-    public int getMaSanPham() {
-        return MaSanPham;
+    public int getId() {
+        return id;
     }
 
-    public void setMaSanPham(int MaSanPham) {
-        this.MaSanPham = MaSanPham;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getTenSanPham() {
-        return TenSanPham;
+        return tenSanPham;
     }
 
-    public void setTenSanPham(String TenSanPham) {
-        this.TenSanPham = TenSanPham;
+    public void setTenSanPham(String tenSanPham) {
+        this.tenSanPham = tenSanPham;
     }
 
     public String getThongTinSanPham() {
-        return ThongTinSanPham;
+        return thongTinSanPham;
     }
 
-    public void setThongTinSanPham(String ThongTinSanPham) {
-        this.ThongTinSanPham = ThongTinSanPham;
+    public void setThongTinSanPham(String thongTinSanPham) {
+        this.thongTinSanPham = thongTinSanPham;
     }
 
     public double getGiaTien() {
-        return GiaTien;
+        return giaTien;
     }
 
-    public void setGiaTien(double GiaTien) {
-        this.GiaTien = GiaTien;
+    public void setGiaTien(double giaTien) {
+        this.giaTien = giaTien;
     }
 
     public int getSoLuong() {
-        return SoLuong;
+        return soLuong;
     }
 
-    public void setSoLuong(int SoLuong) {
-        this.SoLuong = SoLuong;
+    public void setSoLuong(int soLuong) {
+        this.soLuong = soLuong;
     }
 
     public String getHinhAnh() {
@@ -101,7 +98,7 @@ public class SanPham {
 
     @Override
     public String toString() {
-        return "SanPham{" + "id=" + MaSanPham + ", name='" + TenSanPham + '\'' + ", price=" + GiaTien + '}';
+        return "SanPham{" + "id=" + id + ", name='" + tenSanPham + '\'' + ", price=" + giaTien + '}';
     }
 
 }

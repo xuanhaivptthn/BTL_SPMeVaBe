@@ -1,6 +1,7 @@
 package dao;
 
 import model.NguoiDung;
+import utils.PasswordUtil;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,15 +9,19 @@ import java.util.List;
 public class NguoiDungDAO {
 
     public NguoiDung checkLogin(String tenDangNhap, String matKhau) {
-        String sql = "SELECT id, hoTen, email, dienThoai, tenDangNhap, role, status FROM NguoiDung WHERE tenDangNhap = ? AND matKhau = ? AND is_deleted = 0";
+        // Fetch the stored (hashed) password alongside user data
+        String sql = "SELECT id, hoTen, email, dienThoai, tenDangNhap, matKhau, role, status FROM NguoiDung WHERE tenDangNhap = ? AND is_deleted = 0 AND status = 'ACTIVE'";
         try (Connection conn = DBConnect.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
              
             ps.setString(1, tenDangNhap);
-            ps.setString(2, matKhau);
             
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
+                    String storedPassword = rs.getString("matKhau");
+                    // BCrypt verify — works for both hashed and legacy plain-text
+                    if (!PasswordUtil.verify(matKhau, storedPassword)) return null;
+
                     NguoiDung nd = new NguoiDung();
                     nd.setId(rs.getInt("id"));
                     nd.setHoTen(rs.getString("hoTen"));
@@ -149,7 +154,9 @@ public class NguoiDungDAO {
             ps.setString(2, nd.getEmail());
             ps.setString(3, nd.getDienThoai());
             ps.setString(4, nd.getTenDangNhap());
-            ps.setString(5, nd.getMatKhau());
+            // Hash password before storing — never persist plain text
+            String rawPwd = nd.getMatKhau();
+            ps.setString(5, PasswordUtil.isBcryptHash(rawPwd) ? rawPwd : PasswordUtil.hash(rawPwd));
             ps.setString(6, nd.getRole() != null ? nd.getRole() : "CUSTOMER");
             ps.setString(7, nd.getStatus() != null ? nd.getStatus() : "ACTIVE");
             return ps.executeUpdate() > 0;
@@ -218,30 +225,62 @@ public class NguoiDungDAO {
     }
 
     public boolean checkPassword(int id, String rawPassword) {
-        String sql = "SELECT id FROM NguoiDung WHERE id = ? AND matKhau = ? AND is_deleted = 0";
+        String sql = "SELECT matKhau FROM NguoiDung WHERE id = ? AND is_deleted = 0";
         try (Connection conn = DBConnect.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);
-            ps.setString(2, rawPassword);
             try (ResultSet rs = ps.executeQuery()) {
-                return rs.next();
+                if (rs.next()) {
+                    return PasswordUtil.verify(rawPassword, rs.getString("matKhau"));
+                }
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
-            return false;
         }
+        return false;
     }
 
     public boolean updatePassword(int id, String newPassword) {
         String sql = "UPDATE NguoiDung SET matKhau = ? WHERE id = ? AND is_deleted = 0";
         try (Connection conn = DBConnect.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, newPassword);
+            ps.setString(1, PasswordUtil.hash(newPassword));
             ps.setInt(2, id);
             return ps.executeUpdate() > 0;
         } catch (SQLException ex) {
             ex.printStackTrace();
             return false;
         }
+    }
+
+    /**
+     * One-time migration helper: finds all users whose stored password is NOT
+     * already a BCrypt hash and re-hashes them.
+     * Safe to call multiple times — already-hashed rows are skipped.
+     *
+     * @return number of passwords migrated
+     */
+    public int migratePasswordsToHash() {
+        String selectSql = "SELECT id, matKhau FROM NguoiDung WHERE is_deleted = 0";
+        String updateSql = "UPDATE NguoiDung SET matKhau = ? WHERE id = ?";
+        int count = 0;
+        try (Connection conn = DBConnect.getConnection();
+             PreparedStatement sel = conn.prepareStatement(selectSql);
+             ResultSet rs = sel.executeQuery()) {
+            while (rs.next()) {
+                String stored = rs.getString("matKhau");
+                if (!PasswordUtil.isBcryptHash(stored)) {
+                    try (PreparedStatement upd = conn.prepareStatement(updateSql)) {
+                        upd.setString(1, PasswordUtil.hash(stored));
+                        upd.setInt(2, rs.getInt("id"));
+                        upd.executeUpdate();
+                        count++;
+                    }
+                }
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return count;
     }
 }

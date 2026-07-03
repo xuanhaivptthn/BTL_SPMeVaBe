@@ -176,7 +176,7 @@ public class Admin_QLSanPhamServlet extends HttpServlet {
             String khoiLuong = request.getParameter("khoiLuong");
 
             SanPham sp = new SanPham();
-            sp.setMaSanPham(id);
+            sp.setId(id);
             sp.setTenSanPham(name);
             sp.setThongTinSanPham(info);
             sp.setThanhPhan(thanhPhan);
